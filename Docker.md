@@ -20,7 +20,7 @@ Containers are software that wrap up all the parts of a code and all its depende
 
 
 
-![Alt text](../../Pictures//DOCKER%20Full%20Course%20in%20HINDI%20_%20Docker%20Tutorial%20for%20beginners%20in%202022%20_%20Docker%20Compose%20_Great%20Learning%2017-55%20screenshot.png)
+![Alt text](./assests/docker/DOCKER%20Full%20Course%20in%20HINDI%20_%20Docker%20Tutorial%20for%20beginners%20in%202022%20_%20Docker%20Compose%20_Great%20Learning%2017-55%20screenshot.png)
 
 ## Docker install
 
@@ -118,6 +118,9 @@ The second 4444 (after the colon) is the port number inside the container.
 --> remove a container forcefully 
 >> docker rm  -f container_id
 
+--> remove docker image
+>> docker rmi image_id or name
+
 --> create a new image with cuurent container state , to persisit the configuration
 >> docker commit container new_image_name
 
@@ -134,7 +137,155 @@ can think of registries as storage locations for docker images these images can 
 
 ECR , DOCKER HUB , AZURE CONTAINER REPO
 
+--> rename docker image
+>> docker tag oldimage_name newimage_name
 
+>> username/image_name to docker hub
+
+--> login to docker hub
+docker login
+
+--> push to docker hub 
+>> docker push image_name
+
+### docker compose
+it is just a service with docker that let us launch multiple container at the same time
+
+### DOcker swarm
+docker swarm is a service with docker that allows us to manage multiple containers.
+
+## Docker architecture
+![Alt text](./assests/docker/DOCKER%20Full%20Course%20in%20HINDI%20_%20Docker%20Tutorial%20for%20beginners%20in%202022%20_%20Docker%20Compose%20_Great%20Learning%201-32-8%20screenshot.png)
+
+
+## docker file
+scripts that can write and then build into an image. the image can then be run to create the cintainer. its like a shell script
+
+
+Docker Commands for Creating an Image
+
+1. FROM
+
+Syntax: FROM <image>[:<tag>]
+Example: FROM node:14
+Description: Specifies the base image for the new image.
+
+2. LABEL
+
+Syntax: LABEL <key>=<value>
+Example: LABEL maintainer="you@example.com"
+LABEL maintainer="you@example.com"
+LABEL version="1.0"
+LABEL description="This is a sample application"
+LABEL maintainer="you@example.com" \
+      version="1.0" \
+      description="This is a sample application"
+
+Description: Adds metadata to the image.
+
+3. RUN
+
+Syntax: RUN <command>
+Example: RUN npm install && npm run dev
+Description: Executes a command in the shell to install dependencies.
+
+4. COPY
+
+Syntax: COPY <source> <destination>
+Example: COPY ./src /app/src
+Description: Copies files from the host filesystem into the image.
+
+5. ADD
+
+Syntax: ADD <source> <destination>
+Example: ADD https://example.com/file.tar.gz /app/
+Description: Copies files and can extract tar files or copy from URLs.
+
+6. CMD
+
+Syntax: CMD ["executable", "param1", "param2"]
+Example: CMD ["node", "app.js"]
+Description: Specifies the default command to run when the container starts.
+
+7. ENTRYPOINT
+
+Syntax: ENTRYPOINT ["executable", "param1", "param2"]
+Example: ENTRYPOINT ["npm", "start"]
+Description: Configures the container to run as an executable.
+
+8. ENV
+
+Syntax: ENV <key> <value>
+Example: ENV NODE_ENV=production
+Description: Sets environment variables in the image.
+
+9. EXPOSE
+
+Syntax: EXPOSE <port>
+Example: EXPOSE 3000
+Description: Documents which ports the container listens on at runtime.
+
+10. VOLUME
+
+Syntax: VOLUME ["/path"]
+Example: VOLUME ["/data"]
+Description: Creates a mount point for external volumes.
+
+11. WORKDIR
+
+Syntax: WORKDIR <path>
+Example: WORKDIR /app
+Description: Sets the working directory for subsequent commands.
+
+12. USER
+
+Syntax: USER <username>
+Example: USER node
+Description: Sets the username or UID for running the image.
+
+ENTRYPOINT ["python", "app.py"]
+CMD ["--port", "8080"]
+
+```Docker
+
+# Use an official Node.js runtime as a parent image
+FROM node:14
+
+# Set metadata as described above
+LABEL maintainer="you@example.com" \
+      version="1.0" \
+      description="A simple Node.js application"
+
+# Set environment variables
+ENV NODE_ENV=production \
+    PORT=3000
+
+# Create and set the working directory
+WORKDIR /app
+
+# Copy package.json and package-lock.json
+COPY package*.json ./
+
+# Install application dependencies
+RUN npm install --only=production
+
+# Copy the rest of the application code
+COPY . .
+
+# Expose the application port
+EXPOSE 3000
+
+# Set the entry point for the container
+ENTRYPOINT ["node", "server.js"]
+
+# Optionally, you can provide default arguments
+CMD ["--port", "3000"]
+
+```
+
+>> docker build -t my-node-app .
+
+## DOcker Storage
 
 
 
