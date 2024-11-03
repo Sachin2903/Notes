@@ -129,7 +129,7 @@ docker volumes are basically persistent storage locations for the containers. th
 
 volumes drivers allow you to perform unique abilities such as creating persistent storage on other hosts, cloud, encrpt volumes they basically enhance the abilities of a volume.
 
-## docker networks
+### docker networks
 a docker networks is basicallty a connection between one or maore container one of the more powerful thinfs about the docker container is the they can be easult connected to one other and even other software, this makes it very easy to isolate and manage the containers
 
 ### docker registry
@@ -158,7 +158,7 @@ docker swarm is a service with docker that allows us to manage multiple containe
 ![Alt text](./assests/docker/DOCKER%20Full%20Course%20in%20HINDI%20_%20Docker%20Tutorial%20for%20beginners%20in%202022%20_%20Docker%20Compose%20_Great%20Learning%201-32-8%20screenshot.png)
 
 
-## docker file
+### docker file
 scripts that can write and then build into an image. the image can then be run to create the cintainer. its like a shell script
 
 
@@ -285,8 +285,138 @@ CMD ["--port", "3000"]
 
 >> docker build -t my-node-app .
 
-## DOcker Storage
+## Docker Storage
+if you wanted to store data in a docker container it would be stored in the writable layer of the docker container, but this is not an efficient way to store data. SO we make use of different DOcker storage types. These storage types have a lot of advantages over the default storage method.
+
+1. persistent data
+2. transfer data easily 
+3. increase container performance
+
+### Docker storage types
+1. Volumes
+2. Bind Mount 
+3. Tmpfs mount
+
+![Alt text](./assests/docker/storage.png)
+
+1. Docker Volumes
+Docker volumes are basically persistent storage locations for the containers. THey are managed by docker competely. they can be easily attached and removed from containers . we can backup volumes also. this is the most used type of data storages
+
+--> create volumes
+>> sudo docker volume create <name>(batman)
+
+--> show all volumes on system
+>> sudo docker volume ls
+
+--> extra details about the volumes
+>> sudu docker volume inspect batman
+
+--> remove volumes
+>> sudo docker volume rm <name> (batman)
+
+--> remove all volume at a single time 
+>> sudo docker volume prune
 
 
+--> flag to use a volume with a container
+1. --mount ( can be use with bind mount and tmpfs )
+>> sudo docker run -it -d --name ConA --mount <source>,<target>  ubuntu 
+sudo docker run -it -d --name ConA --mount source=batman,target=/path/in/container ubuntu
 
+Specifies a bind mount from a directory on your host machine to a path inside the container.
 
+###### it this valumne does not exist it will create a new volume
+
+--> check details about container
+>>sudo docker container inspect container_name
+
+2. --volume or -v
+sudo docker run -it -d --name ConA --volume flash-/app ubuntu
+
+#### read only volumes
+use readonly flag
+>> docker volume create supermanRO
+
+target=/app,readonly
+
+2. Bind Mount
+
+Bind mount's aren't managed by docker and are mapped to a host system directory.
+
+>> sudo docker run -it -d --name ConA --mount type=bind,source=/path/on/host ( directory from host )  or $(pwd) it will take resent working directory,target=/path/in/container ubuntu
+
+3. Tmpfs mount ( use when store data for temporary usecase )
+this type of torage maps to the host system memory . Tmpfs is not persistent like volumes and tmpfs and get removed when the container they are attached to are stopped. they only ever get mapped to a single container in theru lifetime allows you store more tmeporary data without affeting contaner's eddiciency
+
+>> sudo docker run  -it -d temporaryCont --mount type=tmpfs,target=/app ubuntu 
+
+>> sudo docker run  -it -d temporaryCont --tmpfs /app ubuntu 
+
+## Storage drivers
+in situation where you have to write in the docker's writable layer you can make use of specific storage drivers. these will allow you to maintain control over how docker images & containers are managed and stored.
+here are a afew of the storage drivers
+
+overlay2, aufs, devicemapper, btrfs, vfs
+
+## Docker networks
+A docker network is basically a connection between one or more containers. ONe of the more powerful things about the docker containers is that they can be easily connected to one other and even other software, this makes it very easy to isolate nad manage the containers
+1. Bridge ( default )
+2. Host 
+3. Overlay
+4. Macvlan
+5. None
+
+1. Bridge network :- 
+Docker container that are connected by the means of a bridge network can communicate with each other. this also create a layer of isolation between the docker container that are connected to each other through a bridge network and 
+
+--> create bridge network
+>> sudo docker network create --driver <driver> <name>
+sudo docker network create --driver bridge barbie
+ 
+--> check network
+>> sudo docker network ls
+
+--> detail of a network
+>> sudo docker network inspect network_id / network name
+
+>> sudo docker run -it -d --name defaultcontainer ubuntu 
+
+>> sudo docker ecec -it docker bash
+
+>> apt update && aot install iputils-ping -y
+
+>> exit 
+
+>> ping ip_address ( ip address of the container ) 
+
+--> connecting a bridge to a docker 
+>> sudo docker run -it -d --network barbie --name Mycontantainer
+
+###### container with x and conatiner with y bridge can not connect
+
+2. Docker host
+docker container that are connected to host netork basiccalt share the namesaoce with their hosts, i.e the contaier share the IP address of the host and don't have one of theri own.
+
+In the case container dont have ip they have to depend on the host 
+
+>> sudo docker run -it -d --network host --name myhostcontainer nginx:latest
+
+3. overlay netowrk 
+docker deamon hosts that are connected by the means of an overlay netwok can communicate with each other. this means that containers present in different docker host can communicate each other using the overlay network. this is useful when we need a set of docoker hosts to communicate with each other in a docker swarm
+
+![ Alt text ](./assests/docker/DOCKER%20Full%20Course%20in%20HINDI%20_%20Docker%20Tutorial%20for%20beginners%20in%202022%20_%20Docker%20Compose%20_Great%20Learning%204-21-26%20screenshot.png)
+
+>> sudo docker swarm init
+this makes current node/server/host as a manager and share a command use to attached a worker to this node
+
+>> sudo docker swarm join --token adadasd 172.31.7.58:2377
+
+>> sudo docker network create --driver overlay fun-net
+
+--> creating service with 3 replicas
+>> sudo docker service create --name fun-service --network fun-net --replicas 3 nginx:latest 
+
+--> see all service
+>> sudo docker service ls
+
+>> sudo docker service rm service_is/service_name
