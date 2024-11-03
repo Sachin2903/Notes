@@ -420,3 +420,30 @@ this makes current node/server/host as a manager and share a command use to atta
 >> sudo docker service ls
 
 >> sudo docker service rm service_is/service_name
+
+--> check all inside a service
+>> sudo docker service ps fun-service
+
+4. NOne network 
+a docker container which has none network configured for itself cannot communicate with any service or system as networking for the container is virtially disabled. its usually used to isolate certain containers.
+
+>> sudo docker run -it -d --name noncon --network none ubuntu
+
+
+## Docker Composer
+it is just a service within docker that let's us launch multiple containers, set environment and create replicas at the same time
+
+need to install seperatly
+
+>> docker --version
+>> sudo curl -L "https://github.com/docker/compose/releases/download/1.26.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+
+--> execution right
+>> sudo chmod +x /usr/local/bin/docker-compose
+
+>> docker-compose --version
+
+for docker compose we use docker compose yml file 
+
+docker-compose.yml
+
