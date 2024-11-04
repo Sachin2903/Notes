@@ -443,7 +443,42 @@ need to install seperatly
 
 >> docker-compose --version
 
-for docker compose we use docker compose yml file 
+for docker compose we use docker compose yml file  and this is intendation matter
 
 docker-compose.yml
+version:"3"
+networks:
+    batman:
+      driver: bridge
+
+services:
+  OS:
+    image: "ubuntu1"
+    ports:
+      - "80:80"
+    networks:
+      - batman
+    
+  
+>> sudo docker-compose up
+  
+
+>> sudo docker-compose dowm
+
+## Docker Swarm
+It is a orchestration tool
+
+It allows us to manage and maintain multiple containers this is especially helpful in software development where we maybe making use of micro-services architecture as it breaks down the software into small manageable chunks. having different configurations and environments becomes easier with orchestration.
+
+docker swarm is an orchestration service within docker that allows us to manage and handle multiple containers at the same time. it is also a cluster of multiple containers.
+
+
+![Alt text](./assests/docker/dockerswarm)
+
+
+
+
+
+
+
 
