@@ -475,6 +475,14 @@ docker swarm is an orchestration service within docker that allows us to manage 
 
 ![Alt text](./assests/docker/dockerswarm)
 
+#### Architecture
+
+![Alt text](./assests/docker/swarm)
+
+#### components
+
+![Alt text](./assests/docker/swarmservice)
+
 
 
 
