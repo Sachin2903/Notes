@@ -473,15 +473,17 @@ It allows us to manage and maintain multiple containers this is especially helpf
 docker swarm is an orchestration service within docker that allows us to manage and handle multiple containers at the same time. it is also a cluster of multiple containers.
 
 
-![Alt text](./assests/docker/dockerswarm)
+![Alt text](./assests/docker/dockerswarm.png)
 
 #### Architecture
 
-![Alt text](./assests/docker/swarm)
+![Alt text](./assests/docker/swarm.png)
 
 #### components
 
-![Alt text](./assests/docker/swarmservice)
+![Alt text](./assests/docker/swarmservice.png)
+
+
 
 
 
