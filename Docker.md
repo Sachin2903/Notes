@@ -483,12 +483,39 @@ docker swarm is an orchestration service within docker that allows us to manage 
 
 ![Alt text](./assests/docker/swarmservice.png)
 
+> load balancer is responsible to distribute work between workers based upon resources
 
+swarm manager is use ingress to load balancing 
 
+> Docker swarm common commands
 
+to make a node a manager
+>> sudo docker swarm init --advertise-addr ip_address
+this provide a command to add worker for this
 
+docker swarm join --token adasd ip:port
 
+--> check all nodes
+> sudo docker node ls
 
+--> to know abot the docker , node, swarm details
+>> sudo docker info
+swarm:actice
 
+--> a worker can leave swarm
+>> sudo docker swarm leave
 
+--> get token so worker can join swarm
+>> sudo docker swarm join-token worker
 
+--> get token so more manager can join swarm
+>> sudo docker swarm join-token manager
+
+--> remove a worker from manager node
+>> sudo docker node rm node_id
+
+docker not allow a single swarm manager to leave , if leave with --force flag swarm will end
+
+>> docker swam leave --force
+
+> if a work stop a service , swarm automatically start the service agin may on same node or another node but probably on same 
