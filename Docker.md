@@ -519,3 +519,82 @@ docker not allow a single swarm manager to leave , if leave with --force flag sw
 >> docker swam leave --force
 
 > if a work stop a service , swarm automatically start the service agin may on same node or another node but probably on same 
+
+--> inspect service
+>> sudo docker service service_name
+
+--> remove service name
+>> sudo docker service rm service_name
+
+--> this start a serices using compose (yml file)
+>> sudo docker stack deploy -c docker-compose.yml fun
+
+--> scale a service 
+>> sudo docker service scale service_name=3
+
+--> see stack services
+sudo docker stack services fun
+
+--> to restrict / manager a node 
+>> sudo docker node update --availability drain node_id
+
+after  drain a node no container will not run
+
+--> update service
+>> sudo docker service update --image mysql:latest serice_id
+
+--> remove stack
+sudo docker stack rm fm
+
+
+## AWS ECR
+Elastic container registry ( image repository )
+is an AWS SERVICE that acts as a dedicated location for storing docker images. once a docker client has been authorised it can push and pull to and from th eECR registory. it is useful in a scenario when we don't want to manage a dedicated storage for images and want to use other AWS services that make use of it
+
+steps :-->
+authenticate demon -> push image
+
+
+Aws -> ECR -> get started -> create repository   -> view push command
+
+if a AWS EC2 has to done perform some operation with ECR , that user need some permission
+
+need to install aws cli 
+sudo apt update && apt install awscli -y
+
+paste the commnad get from view command 
+
+>> sudo docker tag image_name repo_url
+
+
+>> sudo docker push image_name
+
+we use ECR when we want to use ECS (Elastic kubernetes service) and EKS(Elastic kubernetes service)
+
+
+## AWS ECS
+Elastic container service
+
+ECS or elastics container service is an AWS service that allows us to orchestrate our software deployment. it acts like any other orchestration tool like kubernetes or docker swarm . it allows us to deply , update , rollback , scale up our software development.
+
+container -> task -> service -> cluster definition
+
+
+![Alt text](./assests/docker/ECS.png)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
