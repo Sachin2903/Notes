@@ -3,8 +3,17 @@
 - framework mantain by google
 - can build single page application
 - angular version :- angularjs --> angular 18
-  MVC at client side
-  AOT compiler
+- MVC at client side
+M -> Model can put schema , interface
+V -> View can put html content 
+C -> Controller can put logic part in ts file
+- AOT compiler
+
+**JIT (Just-In-Time):**  
+Compiles the application code during runt  ime on the user's device. It results in slower startup because the code is being compiled as it executes, but it's useful for development as it allows dynamic changes.  
+
+**AOT (Ahead-Of-Time):**  
+Compiles the application code at build time before deployment. This leads to faster startup, better performance, and earlier error detection, making it ideal for production.
 
 # environment
 
@@ -28,6 +37,8 @@ ng add @angular/ssr
 
 # ngModule and standalone component
 
+before angular 14 if we create a compoennt , we need to declear it in module file 
+
 ![Alt text](./assests/angular/ngvsstandlaone)
 
 lazy loading
@@ -37,17 +48,20 @@ if done lazy loading in ngmodule the whole mofule have to lazy load and in stand
 
 > > ng new project_name --no-standalone
 
-# AOT vs JOT
+# Can Write Html And css direct in .ts file
 
---> create a component
-
-> > ng g c components/user-profile
-> > ng generate component \_\_\_
-
-## to use the component in any .html file
-
-need to add the compoent in imports of component.ts file
-
+```java
+@Component({
+  selector: 'app-root',
+  // templateUrl: './app.component.html',
+  // styleUrl: './app.component.css',
+  styles:"",
+  template:""
+})
+```
+# user app-root  to another component 
+import that compoennt in imports
+then can user in html file <app-root></app-root>
 # Interpolation <h1>{{name}}</h1>
 
 ```angular
@@ -64,7 +78,7 @@ diableButton:boolean=true } in .html file
 <button [disabled]="diableButton">Property Binding</button>
 
 # Event Binding
-
+<!-- <input type="text" (changeases)="onChange($event)"/> -->
 <input type="text" (input)="onChange($event)"/>
 onChange(e:Event){
 const value=(e.target as HTMLInputElement).value;
@@ -94,7 +108,7 @@ imports:[FormsModule],
 
 1.  control flow syntax
     <div>
-      @for(let user of users;track user){
+      @for(let user of users;track user._id){
         @if(user[0]=="s"){
        <h1>{{user}}</h1>
         }
@@ -130,6 +144,76 @@ imports:[FormsModule,CommonModule],
   <h1 *ngIf="user[0]=='s'">{{ user }}</h1>
 </div>
 
+# ng-template and else if 
+
+ng-template is an Angular element used to define reusable, non-rendered content that can be conditionally or dynamically displayed in the DOM
+
+<ng-template #headerTemplate>
+  <h1>Welcome!</h1>
+</ng-template>
+
+<div>
+  <p>Main content goes here.</p>
+</div>
+
+<ng-container *ngTemplateOutlet="headerTemplate"></ng-container>
+
+
+<div *ngIf="condition1; else elseIf2">
+  Condition 1 is true.
+</div>
+<ng-template #elseIf2>
+  <div *ngIf="condition2; else elseIf3">
+    Condition 2 is true.
+  </div>
+</ng-template>
+<ng-template #elseIf3>
+  <div *ngIf="condition3; else elseTemplate">
+    Condition 3 is true.
+  </div>
+</ng-template>
+<ng-template #elseTemplate>
+  None of the conditions are true.
+</ng-template>
+
+
+
+# switch case
+<div [ngSwitch]="true">
+  <div *ngSwitchCase="condition1">Condition 1 is true.</div>
+  <div *ngSwitchCase="condition2">Condition 2 is true.</div>
+  <div *ngSwitchCase="condition3">Condition 3 is true.</div>
+  <div *ngSwitchDefault>None of the conditions are true.</div>
+</div>
+
+# directive
+directive is a class that allows you to attach behavior to elements in the DOM or modify their appearance and structure.
+
 trackByFn(index:number,user:any){
 return user;
 }
+
+
+constructor(){
+
+}
+> life cycle hook
+ngOnInit(){
+
+}
+constructor --> ngOnInit()
+
+# button
+<button (click)="changeTitle"></button>
+
+ class="titile"
+
+button.titile{
+
+}
+or
+.titile{
+
+}
+
+# Data passing from child to parent
