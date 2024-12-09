@@ -216,4 +216,153 @@ or
 
 }
 
-# Data passing from child to parent
+# Data passing from parent to child
+<app-user-profile name="sachin"></app-user-profile>
+<app-user-profile name="sachin" isSingle></app-user-profile>
+function functionName(value){
+return value;
+}
+@Input({alias:"userName",transform:functionName}) name=""
+
+## booleanAttribute
+@Input({alias:"userName",transform:booleanAttribute}) name=""
+
+
+# data passing from child to parent  @Output and events
+>> through events
+
+in child
+@Output() myEvent =new EventEmitter<string>(); import from core
+<{name:string,id:number}>
+sendData(){
+  this.myEvent.emit("any string")
+}
+or
+this.myEvent.emit({name:"",id:""});
+
+
+add event listner in parent compoennt
+
+(myEvent)="functionName($event)"
+
+functionName(event:Event){
+  console.log(event)
+}
+
+# pipe and custom pipe
+* Date pipe
+<p>{{ today | date }}</p>
+<p>{{ today | date:'fullDate' }}</p>
+<p>{{ today | date:'shortTime' }}</p>
+
+Dec 9, 2024
+Monday, December 9, 2024
+11:30 AM
+
+* Uppercase pipe
+<p>{{ 'angular pipes' | uppercase }}</p>
+
+ANGULAR PIPES
+
+* lower case pipes
+<p>{{ 'ANGULAR PIPES' | lowercase }}</p>
+
+* titilecase pipe
+<p>{{ 'angular pipes' | titlecase }}</p>
+
+* currency pipe
+<p>{{ 1234.56 | currency }}</p>
+<p>{{ 1234.56 | currency:'USD':'symbol':'1.2-2' }}</p>
+<p>{{ 1234.56 | currency:'INR':'symbol-narrow' }}</p>
+
+$1,234.56
+$1,234.56
+₹1,234.56
+
+* percent pipe
+<p>{{ 0.25 | percent }}</p>
+<p>{{ 0.25 | percent:'1.0-2' }}</p>
+
+25%
+25.00%
+
+
+* Decimal pipe
+<p>{{ 1234.567 | number }}</p>
+<p>{{ 1234.567 | number:'1.0-2' }}</p>
+<p>{{ 1234.5 | number:'2.2-3' }}</p>
+{minIntegerDigits}.{minFractionDigits}-{maxFractionDigits}
+
+
+1,234.567
+1,234.57
+01,234.500
+
+
+* slice pipe
+<p>{{ 'Angular Pipes' | slice:0:7 }}</p>
+<p>{{ [1, 2, 3, 4, 5] | slice:1:3 }}</p>
+
+* json pipe
+<p>{{ { name: 'Angular', version: 17 } | json }}</p>
+
+* keyValue pipe
+<p *ngFor="let item of {name: 'Angular', version: 17} | keyvalue">
+  {{ item.key }}: {{ item.value }}
+</p>
+
+name: Angular
+version: 17
+
+* async pipe
+@Component({
+  selector: 'app-root',
+  template: `<p>{{ promiseData | async }}</p>`
+})
+export class AppComponent {
+  promiseData = new Promise(resolve => setTimeout(() => resolve('Hello from Promise!'), 2000));
+}
+
+* i18nSelect Pipe
+
+<p>{{ gender | i18nSelect:genderMap }}</p>
+
+gender = 'male';
+genderMap = {
+  male: 'He is learning Angular.',
+  female: 'She is learning Angular.',
+  other: 'They are learning Angular.'
+};
+
+*  i18nPlural Pipe
+<p>{{ messages.length | i18nPlural:messageMap }}</p>
+
+messages = ['Message 1', 'Message 2'];
+messageMap = {
+  '=0': 'No messages.',
+  '=1': 'One message.',
+  other: '# messages.'
+};
+ -
+
+## custom pipe
+ng g p pipes/cutomPipe
+
+import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({
+  name: 'cutomPipe'
+})
+export class CutomPipePipe implements PipeTransform {
+
+  transform(value: unknown, ...args: unknown[]): unknown {
+    return null;
+    // value will be contain teh actual value used in pipe
+    args contain value that pass after pipename followed by : symbols
+  }
+
+}
+
+to use this import this in imports in any module
+
+# Custom directive
