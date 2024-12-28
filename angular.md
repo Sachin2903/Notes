@@ -366,3 +366,346 @@ export class CutomPipePipe implements PipeTransform {
 to use this import this in imports in any module
 
 # Custom directive
+[style.backgroundColor]="colorNameFromTsFile"
+
+use directive if want to use this functionality in many places
+
+> ng g d directives/highlighter
+
+import { Directive, HostBinding } from '@angular/core';
+
+@Directive({
+  selector: '[appHighligher]'
+})
+export class HighligherDirective {
+
+  constructor() { }
+
+  @HostBinding("style.backgroundColor")
+  bgColor="red"
+
+}
+
+
+import { Directive, HostBinding, HostListener } from '@angular/core';
+
+@Directive({
+  selector: '[appHighligher]'
+})
+export class HighligherDirective {
+  private isHighlighted = false;
+
+  @HostBinding('style.backgroundColor') bgColor = 'red';
+
+  @HostListener('click') toggleHighlight() {
+    this.isHighlighted = !this.isHighlighted;
+    this.bgColor = this.isHighlighted ? 'yellow' : 'red';
+  }
+
+  constructor() {}
+}
+------------ or -----------------
+
+export class HighligherDirective {
+el:ElementRef
+  constructor(el:ElementRef){
+    this.el=el
+  }
+
+  ---- or -------
+  constructor(public el:ElementRef){}
+
+  @HostBinding('style.backgroundColor') bgColor = 'red';
+
+  @HostListener('mouseenter') toggleHighlight() {
+   this.el.nativeElement.style.fontSize="50px"
+  
+  }
+}
+
+import directive in imports
+<h1 appHighligher ></h1>
+
+# Life cycle methods
+Lifecycle hooks are special methods in Angular that let you run code at specific times in a component's life. 
+
+## availabe in class in js file . it calls when an instance of a class created
+contructor()
+
+### implements OnInit
+Use ngOnInit for initialization logic that runs once when the component is created.
+
+ngOnInit(){
+  // called when component in ready
+  // initilise properties
+  // when call initial api
+}
+constructor --> ngOnInit
+
+### ngDoCheck: Custom Change Detection
+Called during every change detection cycle, even if no data has changed.
+After Angular's default change detection checks inputs.
+ngDoCheck() {
+  console.log('Custom change detection logic');
+}
+
+
+### implements OnDestroy
+ngOnDestroy(){
+  called when compoent on longer exist
+}
+
+## change when compoennt rerender
+ngOnChanges(){
+
+}
+
+##  Logic to execute only when `specificValue` changes
+ngOnChanges(changes: SimpleChanges): void {
+    if (changes['specificValue'] && changes['specificValue'].previousValue !== changes['specificValue'].currentValue) {
+      console.log('specificValue has changed:', changes['specificValue'].currentValue);
+    }
+}
+
+The SimpleChanges object provides metadata about the changed properties, including:
+* previousValue: The value before the change.
+* currentValue: The new value.
+* firstChange: A boolean indicating if this is the first change.
+
+### ViewChild
+template varibale
+<h1 #myheading ></h1>
+
+in js file
+@ViewChild("myheading") myheading:ElementRef
+
+this.myheading.nativeElement.fontSize
+
+## ngAfterVeiwInit
+ngAfterVeiwInit(){
+  // this called when templete mount on the ui or template ready
+}
+
+
+
+
+Here is a detailed and sequential explanation of all Angular lifecycle hooks, their purpose, when they are called, and the correct order in which they execute:
+
+Complete Angular Lifecycle in Order
+The lifecycle hooks are triggered in the following sequence:
+
+1. ngOnChanges()
+When it’s called:
+It is called whenever an @Input() property value changes.
+Called before any other lifecycle hook and even before the component is initialized.
+Purpose:
+Respond to changes in input properties passed from a parent component.
+Runs Before: ngOnInit.
+Example:
+typescript
+Copy code
+ngOnChanges(changes: SimpleChanges) {
+  console.log('Input property changed:', changes);
+}
+2. ngOnInit()
+When it’s called:
+Called once after the component's input bindings (@Input) are set.
+Runs after the first call to ngOnChanges.
+Purpose:
+Initialize the component after Angular has set the input properties.
+Perform one-time initialization logic, such as fetching data.
+Runs After: ngOnChanges.
+Example:
+typescript
+Copy code
+ngOnInit() {
+  console.log('Component initialized');
+}
+3. ngDoCheck()
+When it’s called:
+Called during every change detection cycle, even if no data has changed.
+After Angular's default change detection checks inputs.
+Purpose:
+Perform custom logic during change detection, especially for detecting changes in nested objects or arrays.
+Runs After: ngOnInit.
+Example:
+typescript
+Copy code
+ngDoCheck() {
+  console.log('Custom change detection logic');
+}
+4. ngAfterContentInit()
+When it’s called:
+Called once after Angular projects content into the component (via <ng-content>).
+Purpose:
+Respond to initialization of projected content.
+Runs After: ngDoCheck.
+Example:
+typescript
+Copy code
+ngAfterContentInit() {
+  console.log('Content projected into the component');
+}
+5. ngAfterContentChecked()
+When it’s called:
+Called after every check of the projected content.
+Runs during every change detection cycle.
+Purpose:
+Perform custom actions after content has been checked.
+Runs After: ngAfterContentInit.
+Example:
+typescript
+Copy code
+ngAfterContentChecked() {
+  console.log('Projected content checked');
+}
+6. ngAfterViewInit()
+When it’s called:
+Called once after the component's view (and child components) has been fully initialized.
+Purpose:
+Perform actions that depend on the DOM or child components being fully rendered.
+Runs After: ngAfterContentChecked.
+Example:
+typescript
+Copy code
+ngAfterViewInit() {
+  console.log('View fully initialized');
+}
+7. ngAfterViewChecked()
+When it’s called:
+Called after every check of the component's view (and child views).
+Runs during every change detection cycle.
+Purpose:
+Perform actions after the view has been checked.
+Runs After: ngAfterViewInit.
+Example:
+typescript
+Copy code
+ngAfterViewChecked() {
+  console.log('View checked');
+}
+8. ngOnDestroy()
+When it’s called:
+Called just before the component is destroyed.
+Purpose:
+Clean up resources like subscriptions, event listeners, or timers to prevent memory leaks.
+Runs Last.
+Example:
+typescript
+Copy code
+ngOnDestroy() {
+  console.log('Component destroyed');
+}
+Execution Order of Lifecycle Hooks
+Here’s the exact sequence in which lifecycle hooks are called:
+
+ngOnChanges (if there are @Input changes).
+ngOnInit.
+ngDoCheck.
+ngAfterContentInit.
+ngAfterContentChecked.
+ngAfterViewInit.
+ngAfterViewChecked.
+ngOnDestroy (when the component is destroyed)
+
+## HttpClient Service, DI & inject
+user service to have organised http request and mantain globalState
+ng g s services/nameoftheservice
+
+inside service module
+http:HttpClient
+constructor(http:HttpClient){
+  this.http=http
+}
+or 
+private http=inject(HttpClient)
+getJoke(){
+  this.http.get().subscribe(data=>{
+    console.log(data)
+  })
+}
+construtor(jokeService:JokeService){}
+this.jokeService.getJoke()
+add provideHttpClient() in app.config.ts  in providers
+##### Observale vs Promise
+
+## state management using services
+
+in services
+private count=0
+
+getCounter(){
+  return this.count;
+}
+
+addCount(){
+  this.count++;
+}
+
+>> to create a seperate instance we need to import services in providers:[] in compoennt
+
+## signal in angular ( introduce in angular 16)
+by default angular use zone.js
+
+>> convert a variable to signal variable
+private count =signal(0);
+
+signals are of 2 type writable and readable signals
+
+--> writable
+when to get value -->
+* this.count()
+* this.count.set(5)
+* this.count.set(this.count()+5)
+* this.count.update((pre)=>pre+1)
+
+--> readable
+doubleCount:Signal<number>=computed(()=>this.count()*2);
+
+when get this value , will return computed value
+
+.doubleCount()
+
+can we access any where if public 
+services.doubleCount();
+
+constructor(){
+  effect(()=>{
+    console.log(this.count(),"",this.doubleCount())
+  })
+}
+
+>> convert input to signal 
+name = input("",{
+  alias:"",
+  transform:functionNAME
+})
+
+this.name() in compoennt and name() in html
+
+## Routing
+
+in app.config
+
+import {routes} from "./app.routes";
+providers:[provideRouter(routes)]
+
+in app.routes.ts
+
+export const routes:Routes=[
+  {path:"login",component:LoginComponent}
+];
+
+then add <router-outlet><router-outlet>
+
+then import that in app.compoennt.ts
+imports:[RouterOutlet]
+
+<a routerLink="/" routerLinkActive="active"></a>
+
+import this in import of that component
+RouterLink, RouterLinkActive
+
+## reactive and template driven forms
+
+
