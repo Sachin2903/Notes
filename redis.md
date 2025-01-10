@@ -217,3 +217,85 @@ async function init() {
   await client.set("key","value");
 }
 ```
+
+
+
+# caching in nest js
+
+>> npm install @nestjs/cache-manager cache-manager
+
+CacheModule from nestjs/cache-manager
+
+import in app.module.ts
+imports:[
+  CacheModule.register({
+    max:100, // maximum number of keys
+    ttl:0,
+    isGlobal:true // to make it global in al module
+  })
+]
+
+ttl -> 0 not expire
+if use cache manager 4. version ttl should be in second and obove this have to use miniseconds
+
+in service 
+
+import Cache from "cache-manager";
+
+constructor (@Inject(CACHE_MANAGER) private cacheManager:Cache){
+     this.cacheManager.set(key,value)
+
+     await this.cacheManager.get(key)
+
+     .del(key)
+
+     .reset() / reset cache
+
+     .store.keys()  // get all keys 
+}
+
+// auto cache data 
+
+
+* @UseInterceptors(CacheInterceptor)
+class ABC{
+
+}
+
+@CacheKey("user")
+* @UseInterceptors(CacheInterceptor)
+async getALlUser
+
+>> npm i cache-manager-redis-store@2
+// allow us to use redis with cache manager
+
+>> npm i @types/cache-manager-redis-store
+
+in app module
+import * as redisStore from "cache-manager-redis-store";
+
+imports:[
+  CacheModule.register({
+    max:100, // maximum number of keys
+    ttl:0,
+    isGlobal:true // to make it global in al module
+    store:redisStore,
+    host:"172.17.0.1",
+    port:"6379"
+  })
+]
+
+```js
+You can manually specify a TTL (expiration time in seconds) for this specific key, as follows:
+
+await this.cacheManager.set('key', 'value', 1000);
+
+To disable expiration of the cache, set the ttl configuration property to 0:
+
+
+
+await this.cacheManager.set('key', 'value', 0);
+```
+
+@CacheKey('custom_key')
+  @CacheTTL(20)
