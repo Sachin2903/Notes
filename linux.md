@@ -158,6 +158,43 @@ secure shell generate a private key
 > ssh -i privatekeypath ubuntu@ce2address
 --> connnect ec2 server on out plateform
 
+sudo apt-get install openssh-server
+sudo service ssh start
+
+ssh-keygen -t rsa
+ssh-copy-id username@SystemB_IP
+
+
+Find System B's IP Address: Get the IP address of System B using ifconfig or ip addr.
+
+
+ssh username@SystemB_IP
+
+> df ( disk usage )
+
+> du (know about specific folder )
+du  .
+
+> ls -a 
+
+> fuser (  )
+
+> kill -9 processiD
+
+> free 
+
+> nohup ( save logs / save output of any command )
+nohup free -h
+
+head -n 5 nohup.out
+
+> vmstart ( memory / cache )
+
+## User and group and file management
+
+#### SYstem level command
+
+
 
 
 
