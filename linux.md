@@ -150,6 +150,14 @@ vi file.txt > i > esc > :wq > enter
 
 ## connect one linux to another
 
+ssh
+secure shell generate a private key
+
+
+
+> ssh -i privatekeypath ubuntu@ce2address
+--> connnect ec2 server on out plateform
+
 
 
 
