@@ -97,6 +97,8 @@ Procss state :- Sleeping . running , terminated , zombie
 > echo "hello dosto" > demofile.txt
 --> print data in a file , id file is not exist it create  a file and add that text
 
+> grep
+
 > zcat file name
 --> see inside zip file
 
@@ -190,26 +192,199 @@ head -n 5 nohup.out
 
 > vmstart ( memory / cache )
 
-## User and group and file management
+## System level command
 
-#### SYstem level command
+> uname ( what platform )
+output ubuntu
+
+> uptime ( time from system running )
+
+> who (list of user and when login)
+
+> whoami ( user name )
+
+> python --version ( check version )
+
+> which bash ( location / version  of command , package )
+which cp
+
+> id 
+
+> sudo (super user do)
+
+> cat /etc/passwd  ( for users )
+> cat /etc/group ( for group )
+
+> sudo shutdown ( shutdowm )
+
+> sudo reboot
+
+> apt ( application package manager )
+sudo apt install docker.io ( look socker in systme )
+sudo apt-get install docker.io ( get from internet )
+* redhat -> rpm
+* fedora -> dnf
+* ubuntu -> apt
 
 
+## User and group management commands
 
+>> useradd -m user_name
+-m ( add and make a directory ) ( if not use -m user created but not added )
 
+give user a password
+> sudo passwd jethalal 
+add new password
 
+> su username 
+this switch user
 
+> exist ( to do back from user )
 
+> sudo userdel username (delete user)
 
+> sudo groupadd deveps ( crate a group )
 
+> sudo gpasswd -a -M  user1,uername groupname (add user to group )
 
+-a add
+-M multiple users
 
+> sudo groupdel groupname ( delete group name ) (this donot delete user inside this group )
 
+## file permission commands
 
+> ls -l tp see permission
 
+dtwxrwxr-x
+user -> group -> others users
+r->read
+w->write
+x->execute
 
+* ---   0
+* --x   1
+* -w-   2
+* -wx   3
+* r--   4
+* r-x   5
+* rw-   6
+* rwx   7
 
+> chmod 777 file/foldername
+chmod 700 file_name
 
+> umask  ( it is a 4 digit number , that show what permission will be given to new file or folder when created )
+
+> cat .bashrc ( bash config )
+
+> sudo chown username filename
+( change ownership ) 
+
+> sudo chgrp group filename
+( chaneg group permission )
+
+--> compress zip
+> sudp apt zip
+
+> zip -r zip_file_name filename  
+-r recursively for folder
+
+> unzip filename to unzip a file
+
+> gunzip (zip) gzip (unzip) same as above
+
+> tar untar ( also do same but it need some flags)
+tar -cvzf filename.tar.gz  filename
+tar -xvzf compressfilename 
+f -> file 
+c -> compress
+x ->  extract
+v ->  verbose
+z ->  use gunzip tar.gz
+
+## transfer a file to remote
+--> to send
+scp -i  pathtoprivatekeyfile filename remote_url:where to save 
+
+--> to get
+scp -i  pathtoprivatekeyfile remote_url:what_file   where
+
+--> remote sync
+apt rsync 
+rsync -e "ssh -i pathtoprivatekey" -avz filename remote_url:path
+
+same as scp but better
+
+## Networking Commands
+
+> ping domain
+
+this chekc whether an domain/server is uprunning by sending some data and recieved data
+
+> sudo apt net-tools
+> netstat
+> ifconfig
+> traceroute domain/server
+tells the route / path of data flow
+> trancepath domain/server
+> mtr domain/server to use ping and tracepath togather
+my trace route
+> nslookup domain/server
+80 , 8080 fror http and 443 for https 
+
+> telnet
+> hostname tells ip of this 
+hostname anydomain/server
+
+/etc/host
+
+> whois domain/server
+deepth details 
+
+> curl and wget
+to get response from a server and wget to download 
+
+sudo apt install jq
+curl -X GET endpoint | jq
+wget endpoint
+
+> iptables
+
+> watch mtr
+will check/call after 2 secs
+
+> nmap 
+network map simillar to traceroute
+
+> route 
+change route
+
+## Pro linux command 
+> awk 
+programming in linux is done by shell scripting but if donot want to code we can use awk
+
+work on csv , tsv 
+
+* awk '{print}' file_name --> to print file
+
+* awk '{print $1}' file_name --> to print  column 1
+awk '{print $1,$2}' file_name --> to print  column 1,2
+
+* awk '/INFO/ {print $1,$2}' file_name --> to print  column 1,2
+
+* awk '/INFO/ {print $1,$2}' file_name > filename --> to print  column 1,2 and print in another file
+
+* awk '/INFO/ {count++} END {print count}' file_name --> to print  count and print
+
+* awk '/INFO/ {count++} END {print "string",count}' file_name --> to print  count and print
+
+* awk '$2 >= "08:55" && $2 <= "08:55" {print $2,$3,$4}' file_name
+
+* awk '$2 >= "08:55" && $2 <= "08:55" {print NR}' file_name
+print no of rows
+
+> SED 
 
 
 
