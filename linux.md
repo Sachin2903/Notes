@@ -361,10 +361,10 @@ network map simillar to traceroute
 change route
 
 ## Pro linux command 
-> awk 
+>> awk 
 programming in linux is done by shell scripting but if donot want to code we can use awk
 
-work on csv , tsv 
+> work on csv , tsv , structure data , comma seperated data
 
 * awk '{print}' file_name --> to print file
 
@@ -384,7 +384,124 @@ awk '{print $1,$2}' file_name --> to print  column 1,2
 * awk '$2 >= "08:55" && $2 <= "08:55" {print NR}' file_name
 print no of rows
 
-> SED 
+>> SED ( Stream editor )
+have to right expression
+> sed '/INFO/p' filename
+use -n for exacct match
+p for print
+
+> sed 's/INFO/LOG/g` filename
+this change INFO to LOG
+s for substring 
+g global 
+
+> sed -n -e '/INFO/=' app.log
+this print line number where this exist 
+
+> sed -n -e '/INFO/=' -e '/INFO/p' app.log
+this print line number where this exist 
+and print that
+
+> sed '1,10 s/INFO/LOG/g' filename
+done operation in range
+
+>> GREP
+global regular expresion pattern
+
+> grep INFO app.log
+> grep -i info filename
+-i for case insensitive
+
+> grep -i -c info app.log
+count
+
+> awk '/INFO/ {count++} END {print count}' filename
+
+
+## Linux Volume Management
+
+![alt text](./assests/linux_aws_volumes.png)
+
+list the blocks
+> lsblk
+show all block 
+> df -h 
+show storage and availabel directory
+
+--> EBS
+snapshot is the backup of an volume , it comes when we create block in EBS
+
+after creating -> attached -> give instance (EC2) -> device name /dev/sdf
+f g h ...
+
+--> Physical vs logical vs volume groups in linux 
+
+![alt text](./assests/volume.png);
+
+--> LVM logical volume manager :- manage physical , logical , volume groups
+
+> sudo su to become root user
+> sudo lvm
+
+> pvs physical volumes
+volumes -> physical volumes
+
+> pvcreate /dev/xvdf /dev/xvdg /dev/xvdh 
+
+this create physical volumes
+
+> vgcreate tws_vg (volume group) /dev/svdf /dev/xvdg
+ this create volume group of 2 physical volume 
+> vgdispaly
+> lvdisplay
+
+> pvdisplay
+this print / show about all physical volumes
+
+> vgs
+to know about physical volume
+
+> lvcreate -L 10G -n tws_lv tws_vg
+
+-L size 
+
+to create a logical volume from voulme groups
+
+##### mount volume and lvm 
+
+> lvs
+show lv
+
+to mount
+> mkdir /mnt/tws_lv_mount
+> mkfd.ext4 /dev/tws_vg/tws_lv
+to format lv
+> mount /dev/tws_vg/tws_lv /mnt/tws_lv_mount
+
+this mount to source
+
+> unmount /mnt/tws_lv_mount
+this unmout this volume
+
+##### EBS , mount physical volume
+
+xvdh direct mount
+
+> mkdir /mnt/tws_disk_mount
+
+> mkfs -t ext4 /dev/xvdh
+format disk
+
+> mount /dev/xvdh /mnt/tws_disk_mount/
+to mount
+
+logical volumes and physical volume mount and anmount above
+
+#####  Dynamic storage management
+ extend logical storage size
+
+ > lvextend -L +5G /dev/tws_vg/tws_lv
+
 
 
 
