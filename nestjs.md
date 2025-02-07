@@ -399,6 +399,13 @@ export class JwtGuard extends AuthGuard('jwt') {
 }
 ```
 
+export class AppModule implements OnModuleInit {
+  async onModuleInit() {
+    console.log(process.env.MONGO_URI)
+  }
+}
+
+
 
 
 ### Class Validator and class Transformer
