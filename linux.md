@@ -47,22 +47,46 @@ etc
 
 ## Linux Commands
 
-> top
+> top 
+--> The top command in Linux shows real-time system performance, including CPU, memory usage, and running processes.
 --> runnning process
 PS 1 is the file that run first
 Procss state :- Sleeping . running , terminated , zombie
+can use htop command for more user friendly
 
 > df -h
 --> disk space
+--> Shows disk space usage for all mounted filesystems
 
 > free -h
 --> see ram
+Displays memory (RAM) usage, including total, used, free, and swap memory
 
 > cd
 --> change directory
 
 > cd ../
 --> move back
+
+~/ -> home 
+/ -> root
+
+bin	 --> Stores important programs like ls, cp, and rm that all users can run.
+boot --> Contains files needed to start the computer, including the Linux kernel.
+dev	 --> Stores special files that represent hardware (like USBs, hard drives).
+etc	 --> Holds system settings and configuration files (like network settings).
+home --> Each user's personal folder (e.g., /home/user).
+lib, lib32, lib64 --> Stores libraries that programs need to run. (Like DLL files in Windows).
+media --> Where USBs and CDs get mounted when inserted.
+mnt	  --> A folder used to temporarily attach external drives.
+opt -->	Used for optional software (programs installed manually).
+proc --> A virtual folder with live system information (like CPU and memory usage).
+run	 --> Stores temporary system processes and runtime data.
+tmp --> A temporary storage space (files here are deleted on reboot).
+usr --> Stores user programs and files (/usr/bin/ contains most applications).
+var --> Holds logs, temporary files, and caches (like history of system events).
+
+
 
 > cd /
 --> go to root folder
@@ -97,7 +121,6 @@ Procss state :- Sleeping . running , terminated , zombie
 > echo "hello dosto" > demofile.txt
 --> print data in a file , id file is not exist it create  a file and add that text
 
-> grep
 
 > zcat file name
 --> see inside zip file
@@ -133,6 +156,10 @@ can work with 1 or more file
 
 > cut -b 1-4 filename.txt
 --> show words from index
+
+> echo "Hello World Linux" | cut -d ' ' -f 1-2
+-d ' ' → Uses space as the delimiter (separator between words).
+-f 1-2 → Selects the first and second words.
 
 > echo "hello" | tee
 > echo "hello" | tee hello.txt
