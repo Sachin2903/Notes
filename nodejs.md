@@ -44,3 +44,11 @@ path.extname('file.txt') → ".txt"
 
 path.parse(filePath)
 Parses a path into an object (root, dir, base, ext, name). { root: '/', dir: '/home/user', base: 'file.txt', ext: '.txt', name: 'file' }
+
+
+const response = await axios.get(url, { responseType: 'stream' });
+await pipeline(response.data, fs.createWriteStream(toStoreFileName));
+console.log('Download complete!', fileType);
+  
+const data = new FormData();
+data.append('file', fs.createReadStream(toStoreFileName));

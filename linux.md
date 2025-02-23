@@ -1,10 +1,10 @@
-#                     Linux Operating System
+#            Linux Operating System
 
 
 ## Basic understanding
 
 > data is transfer through cables
-
+                                                                        
 IP ADDRESS --> ISP (Internet Service Provider ) --> Optical Fiber --> Data Center
 
 > Server ( Server / Dilever information )
@@ -124,6 +124,9 @@ var --> Holds logs, temporary files, and caches (like history of system events).
 > echo "hello dosto" > demofile.txt
 --> print data in a file , id file is not exist it create  a file and add that text
 
+| → Passes output to another command.
+> → Redirects output to a file (overwrites).
+>> → Redirects output to a file (appends).
 
 > zcat file name
 --> see inside zip file
@@ -179,16 +182,16 @@ can work with 1 or more file
 can not differe more than 2 file
 
 > vi (editor)
-vi file.txt > i > esc > :wq > enter
+vi file.txt > i > esc >
+when save -> :wq > enter
+: → Enters command mode
+w → Writes (saves) the changes to the file
+q → Quits the editor
 
---> | (Pipe) → Passes output of one command to another.
-Example: ls -l | grep ".txt" (Filters .txt files from the list)
-
---> > (Redirection) → Redirects output to a file (overwrites).
-Example: ls -l > output.txt (Saves output to output.txt)
-
---> >> (Append Redirection) → Redirects output to a file (appends).
-Example: ls -l >> output.txt (Adds output to output.txt without overwriting)
+when not to save -> :q!
+: → Enters command mode.
+q → Stands for "quit."
+! → Forces quitting without saving changes.
 
 ## connect one linux to another
 
@@ -204,15 +207,17 @@ sudo apt-get install openssh-server
 sudo service ssh start
 
 ssh-keygen -t rsa
+You can also specify a different key name directly:
+ssh-keygen -t rsa -f ~/.ssh/new_key_name
+
 ssh-copy-id username@SystemB_IP
+ssh-copy-id -i ~/.ssh/your_key.pub username@SystemB_IP
 
 
 Find System B's IP Address: Get the IP address of System B using ifconfig or ip addr.
 
 
 ssh username@SystemB_IP
-
-> df ( disk usage )
 
 > du (know about specific folder )
 du  .
@@ -221,16 +226,9 @@ du  .
 
 > fuser (  )
 
-> kill -9 processiD
-
-> free 
-
-> nohup ( save logs / save output of any command )
-nohup free -h
+> kill -9 processi
 
 head -n 5 nohup.out
-
-> vmstart ( memory / cache )
 
 ## System level command
 
