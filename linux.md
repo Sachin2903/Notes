@@ -134,6 +134,8 @@ var --> Holds logs, temporary files, and caches (like history of system events).
 > head myfile.txt
 --> print top 5 file
 
+> head -n 5 nohup.out
+
 > tail myfile.txt
 --> print last 5 line
 
@@ -228,7 +230,6 @@ du  .
 
 > kill -9 processi
 
-head -n 5 nohup.out
 
 ## System level command
 
