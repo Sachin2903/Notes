@@ -284,7 +284,8 @@ this switch user
 
 > sudo groupadd deveps ( crate a group )
 
-> sudo gpasswd -a -M  user1,uername groupname (add user to group )
+> sudo gpasswd -a -M  "user1,uername" groupname (add user to group )
+sudo gpasswd -a user1 groupname
 
 -a add
 -M multiple users
@@ -324,7 +325,7 @@ chmod 700 file_name
 ( chaneg group permission )
 
 --> compress zip
-> sudp apt zip
+> sudo apt install zip
 
 > zip -r zip_file_name filename  
 -r recursively for folder
@@ -333,18 +334,19 @@ chmod 700 file_name
 
 > gunzip (zip) gzip (unzip) same as above
 
-> tar untar ( also do same but it need some flags)
+> tar  ( also do same but it need some flags)
 tar -cvzf filename.tar.gz  filename
 tar -xvzf compressfilename 
-f -> file 
+f -> Specify the archive file name
 c -> compress
 x ->  extract
-v ->  verbose
+v ->  Verbose mode (shows progress)
 z ->  use gunzip tar.gz
 
 ## transfer a file to remote
 --> to send
 scp -i  pathtoprivatekeyfile filename remote_url:where to save 
+scp -i path_to_private_key filename username@remote_host:/path/to/destination/
 
 --> to get
 scp -i  pathtoprivatekeyfile remote_url:what_file   where
