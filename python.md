@@ -1,4 +1,4 @@
-#                                    Python 3.11
+# Python 3.11
 
 ### why?
 Easy to read and learn
@@ -42,7 +42,6 @@ name ="sachin"  (str)
 
 --> stringly typed language 
 do not allow 
-type casting
 
 ### check type 
 type(variable_name)
@@ -80,7 +79,12 @@ print(int(pi))  # Output: 3
 num = 100
 print(str(num))  # Output: "100"
 
--> Convert string to int (if valid)
+-> Convert string to i
+
+
+
+
+nt (if valid)
 s = "50"
 print(int(s))  # Output: 50
 
@@ -109,6 +113,7 @@ users[0]
 .append("paul") --> add  in end
 .pop()
 .remove("sachin") -> will remove this
+remove can't be empty and can not have value that is not present in the list
 insert()
 .clear()
 .cop()
@@ -119,7 +124,7 @@ insert()
 ✔ insert(i, x) → Inserts x at index i.
 ✔ clear() → Removes all elements from the list.
 ✔ copy() → Returns a shallow copy of the list.
-✔ del list[3] -> will delete value at 3
+✔ del list[3] -> will delete value at 3, can not be out of range
 ✔ len(list) -> give list length
 ✔  sort(list)  .sort(reverse=True)
 
@@ -143,14 +148,160 @@ days[0]
 days.count("mon") -> return number of occurance
 days.index("tue") -> give index of value
 
-# Dictionaries
+### Dictionaries
 key:value
 
+marks={ "Hindi":80 }
+print(marks)
+marks["Hindi"]
+
+marks.get("Hindi")
+this is better to avoid error if any error is not in the dictionary
+
+del marks["hindi"]
+
+len(marks)
+
+### Sets
+my_sets={"mon","tue"}
+onyl store unique value and unorder value
+
+my_sets.add("fri")
+my_sets.pop()
+
+
+my_list=["mon","tues"];
+days_set=set(my_list)
+print(days_set)
+
+### user inteaction
+name =input("whats's you name")
+age=int(input("your age"))
+
+### COnditional statement
+
+if age>=18:
+ print(" aligible to vote")
+else:
+ print("not aligible to vote")
+
+users=["paul,"raju"]
+if "paul' in users:
+print("")
+
+if 15<52:
+elif 10>12:
+else:
+
+### LOgical operator
+
+and , or 
+
+10<20 and 20<50
+10>20 or 10<20
+
+### Loops
+for i in 1,2,3,5,5:
+print(i)
+
+--> in list
+num=[1,2,3,4,5,6]
+for i in num:
+print(i)
+
+--> in dictionaries
+age_info={raju:25,sham:30}
+for name, age in age_info.item()
+
+for name in age_info.keys()
+for age in age_info.values()
+
+for num in range(1,10)
+print(num)
+1-9
+
+### while loop
+while 10>20:
+prin("while loop")
+
+### break and continue
+break
+continue
+
+### Functions
+def myFUn():
+
+myfun()
+
+def myFUn(a,*b)
+
+b wiill contain all remaing parameters as a list
+print("*"*20)
+this will print * 20 times
+
+**user_info now things will be in dictionaries
+
+myfunction(age=18,city="delhi")
+
+### function as module
+import calcy (filename)
+
+calcy.add()
+add will be the function written in calcy.py file
+
+### OOPS
+class and object
+
+class -->
+```py
+class Employees:
+    company="abc.p vt"
+    def __init__(self,name ,dept):
+self.name=name
+self.dept=dept
+
+def classFUn(self):
 
 
 
+# object -->
+emp1=Employees("rangu","sales");
+emp1.salary
 
+Employees.company
+# can also directly accessible
+pass
+```
 
+use class in another file
 
+import filename
+
+employess.EMployess()
+
+# Exception Handling
+```py
+try:
+print(10/0)
+except ZeroDivisionError:
+    print("try error name ,can get this error name from console terminal")
+
+try:
+print(10/0)
+except Exception as e:
+    print("try error name ,can get this error name from console terminal")
+finally:
+    
+```
+## random and datetime
+
+import random
+random.random()
+regenrate a random float between 0 to 1
+random.random(1,100)
+regenrate a random float between 1 to 100
+
+options=["apple"]
+random.choice(options)
 
 

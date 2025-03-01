@@ -373,6 +373,8 @@ tells the route / path of data flow
 my trace route
 > nslookup domain/server
 80 , 8080 fror http and 443 for https 
+nslookup -type=mx offiqltech.com
+
 
 > telnet
 > hostname tells ip of this 
