@@ -1,4 +1,6 @@
-tupless=(0,1,2,3,4)
+age_info={"raju":25,"sham":30}
 
-print(tupless.count(2))
-print(tupless[0:2])
+for name in age_info.keys():
+ print(name)
+
+print(range(1,10))
