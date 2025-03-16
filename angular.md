@@ -440,7 +440,8 @@ ngOnInit(){
   // initilise properties
   // when call initial api
 }
-constructor --> ngOnInit
+constructor --> ngOnI
+nit
 
 ### ngDoCheck: Custom Change Detection
 Called during every change detection cycle, even if no data has changed.
