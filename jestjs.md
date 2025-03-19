@@ -222,3 +222,55 @@ image alt text
 ### Priority order for RTL queries
 
 ### Assertion Method
+* .toBeInTheDocument()
+* .toHaveValue()  -->  check default value
+* .toHaveValue("value")  -->  check default value
+* .toBeEnable() or .toBeDisabled --> check disabled 
+* .toHaveAttribute("alt") --> check attribute
+* .toHaveClass("class")
+* .not.any Assertion
+
+### Test match with string and regex
+
+
+.getByText("Hello World",{exact:false})
+.getByText(/Hello World/)
+.getByText(/Hello World/i)
+.getByText(/Hello W?orld/i) w is not sure
+
+### Text Match with function
+.getByText((contenet,element)=>content.startsWith("Hello"))
+
+.getByText((contenet,element)=>content.endsWith("Hello"))
+
+.getByText((contenet,element)=>{
+  return content.startsWith("Hello")
+})
+
+content is text inside tag
+
+### QueryBy and queryAllBy
+
+* screen.getByText("asd") --> this get based upon ui
+* screen.getByQuery("Login") --> this check in complete file
+
+### FindBy and FindByAll
+await .findByText()
+works only if text is in document with in 1s
+
+await .findByText("",{},{timeout:5000})
+
+how it works with 5s it can have till 5s
+
+### Js Query or custom query
+document.querySelector("#testId")
+
+### Querying Within Elements
+find element within an elements
+
+used when we what to check a parent must have specific tag
+let el =screen.getByText("Hello")
+let subEl=within(el).getByText("hi")
+
+### CLick Event WIth User Event
+
