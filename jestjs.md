@@ -273,4 +273,73 @@ let el =screen.getByText("Hello")
 let subEl=within(el).getByText("hi")
 
 ### CLick Event WIth User Event
+on change in input box
+
+```js
+
+import userEvent from "@testing-libraray/user-event";
+test("On CHnage event testing",async ()=>{
+  userEvent.setup()
+render(<App/>);
+const el=screen.getByRole("textBox")
+await userEvent.type(el,"anil") // this type in the input element , we need to use async when we use userEvent
+expect(screen.getByText("anil")).toBeInTheDocument();
+})
+```
+
+### Act function
+
+```js
+
+import userEvent from "@testing-libraray/user-event";
+test("On CHnage event testing",async ()=>{
+  userEvent.setup()
+render(<App/>);
+const el=screen.getByRole("textBox")
+await act(async ()=>{ await userEvent.type(el,"anil")}) // this type in the input element , we need to use async when we use userEvent
+expect(screen.getByText("anil")).toBeInTheDocument();
+})
+```
+
+### test component props
+<User name="anil"/>
+
+```js
+test("Props testing",()=>{
+  render(<User name="sachin">)
+  const user=screen.getByText("sachin");
+  expect(user).toBeInTheDocument()
+})
+
+```
+
+### Functional Props testing and mocking
+
+test("functional props testing",()=>{
+  const testFunction=jest.fn();
+  userEvent.setup();
+  render(<App testFunction={testFunction}/>);
+  const btn=screen.getByROle("button")
+  await userEvent.click(btn);
+  expect(testFunction).toBeCalled()
+
+})
+
+### MSW and Http Request testing
+
+MSW --> mock service worker
+we mock api to save server and cost and is complex
+
+mockServices/server.js and handler.js
+handler.js
+import {rest} from "msw";
+
+export const handler=[
+  rest.get("endpoint",)
+]
+
+
+
+
+
 

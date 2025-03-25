@@ -10,7 +10,7 @@ C -> Controller can put logic part in ts file
 - AOT compiler
 
 **JIT (Just-In-Time):**  
-Compiles the application code during runt  ime on the user's device. It results in slower startup because the code is being compiled as it executes, but it's useful for development as it allows dynamic changes.  
+Compiles the application code during run time on the user's device. It results in slower startup because the code is being compiled as it executes, but it's useful for development as it allows dynamic changes.  
 
 **AOT (Ahead-Of-Time):**  
 Compiles the application code at build time before deployment. This leads to faster startup, better performance, and earlier error detection, making it ideal for production.
