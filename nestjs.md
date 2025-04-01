@@ -1,5 +1,17 @@
 # Nest js
 
+
+### Aggreigation
+
+```js 
+{
+            $group: {
+              _id: "$puja", 
+              doc: { $first: "$$ROOT" }
+            }
+          },
+          { $replaceRoot: { newRoot: "$doc" } },  
+```
 ## Relation And Populate
 
 ##### In node js
@@ -409,3 +421,4 @@ export class AppModule implements OnModuleInit {
 
 
 ### Class Validator and class Transformer
+
