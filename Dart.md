@@ -188,6 +188,7 @@ Using `const` where possible improves performance by reducing memory usage.
   ```dart
   String? str = null; // Nullable String
   String? str;
+  late String str;
 
   print(str?.length); // Safe access
   print(null ?? 0);   // Null-aware operator
@@ -448,7 +449,7 @@ cookie.setHeight = 15;
 
 ---
 
-## 🧷 Static Members
+## Static Members
 
 ```dart
 class Constants {
@@ -464,6 +465,7 @@ Constants.giveValue();
 ```
 
 > Only static members can be accessed inside a static method.
+>The static getter 'str' can't be accessed through an instance.
 
 ---
 
@@ -495,7 +497,7 @@ Vehicle myCar = Car();
 
 ---
 
-## 🧩 Abstract Class & Implements
+## Abstract Class & Implements
 
 ### Abstract Class
 
@@ -504,8 +506,6 @@ abstract class Vehicle {
   void accelerate(); // Abstract method
 }
 ```
-
-### Implements
 
 ```dart
 class Car implements Vehicle {
@@ -581,11 +581,7 @@ class BankAccount {
 }
 ```
 
-## ✅ Dart Notes: Mixins, Objects, and Class Modifiers
-
----
-
-### 🔁 Mixins
+## 🔁 Mixins
 
 - **Mixins** allow you to share functionality between classes without using inheritance.
 - Use the `with` keyword to apply a mixin.
@@ -648,17 +644,23 @@ class Animal with Jump, Scream {
 
 ---
 
-### 🧍‍♂️ Object Declaration
+## 🧍‍♂️ Object Declaration
 
 - The `Object` type can hold any value in Dart.
 
 ```dart
 Object name = "Sachin";
 ```
+Object name = "Sachin";
+
+// This will give an error:
+// print(name.toUpperCase()); ❌
+
+print((name as String).toUpperCase()); // ✅ works after casting
 
 ---
 
-### 🏷️ Class Modifiers
+## 🏷️ Class Modifiers
 
 #### 🧪 Type Checking with `switch`
 
@@ -676,7 +678,7 @@ switch (animal) {
 
 ---
 
-### 🔧 `implements` Keyword
+#### 🔧 `implements` Keyword
 
 - Use `implements` to force a class to follow a certain structure.
 - You must override **all members** of the interface.
@@ -691,9 +693,9 @@ class Human implements Animal {
 
 ---
 
-### 🛑 `sealed` Classes (Dart 3+)
+###  `sealed` Classes (Dart 3+)
 
-- A **sealed class** restricts subclassing to within the same library.
+- A **sealed class** can only be extended or implemented in the same file where it is defined.
 - All possible subclasses must be **exhaustively handled** in a `switch`.
 
 ```dart
@@ -716,7 +718,7 @@ void checkAnimal(Animal animal) {
 
 ---
 
-### 🔐 `final` Classes
+#### 🔐 `final` Classes
 
 - A **final class** can be instantiated but **cannot be extended**.
 
@@ -730,7 +732,7 @@ class Dog extends Animal {} // ❌ Error
 
 ---
 
-### 🧱 `base` Classes
+#### 🧱 `base` Classes
 
 - A **base class** can only be extended or implemented **within the same package**.
 - It promotes better encapsulation.
@@ -753,14 +755,6 @@ Iterable list = [10, 20, 30, "Sachin"];     // also valid, more generic
 print(list[0]);  // Output: 10
 ```
 
-With **Generics**:
-
-```dart
-List<int> marks = [10, 20];
-```
-
----
-
 ## 🧠 Generics in Classes
 
 ```dart
@@ -905,203 +899,22 @@ class Employee {
 
 ## 🚀 Enhanced Enums
 
-You can associate values and even methods with enums.
-
 ```dart
 enum EmployeeType {
-  swe(2500),## 📦 List
+  finance(2000),
+  marketing(2200);
 
-An **ordered collection** of dynamic or specific type objects.
-
-```dart
-List list = [10, 20, 30, "Sachin"];         // dynamic list
-Iterable list = [10, 20, 30, "Sachin"];     // also valid, more generic
-
-print(list[0]);  // Output: 10
-```
-
-With **Generics**:
-
-```dart
-List<int> marks = [10, 20];
-```
-
----
-
-## 🧠 Generics in Classes
-
-```dart
-class Student<T> {
-  T data;
-  Student(this.data);
+  final int salary;
+  const EmployeeType(this.salary);
 }
 
 void main() {
-  Student<String> student = Student<String>("Sachin");
-  print(student.data);
-}
-```
+  EmployeeType emp = EmployeeType.finance;
 
-Auto type checking ensures type safety at compile-time.
-
-Check type at runtime:
-
-```dart
-if (student is Student) {
-  print(student.data);
-}
-```
-
----
-
-## 🔧 List Operations
-
-```dart
-List<int> list = [1, 2, 3];
-
-// Access or update elements
-list[2] = 30;
-
-// Add elements
-list.add(4);
-
-// Insert at specific index
-list.insert(1, 100);  // Push others ahead
-
-// Remove by value
-list.remove(3);
-
-// Loop
-for (final item in list) {
-  print(item);
+  print(emp);             // Output: EmployeeType.finance
+  print(emp.salary);      // Output: 2000
 }
 
-// Map
-list.map((e) => print(e));
-
-// Filter
-list.where((item) => item >= 20).toList();
-
-// Other useful methods
-list.reversed.toList();
-list.first;
-list.last;
-list.contains(30);
-list.elementAt(2);
-```
-
----
-
-## 🎯 Sets
-
-A **Set** is an unordered collection of unique items.
-
-```dart
-Set<Student> students = {
-  Student("Ravaan", 10)
-};
-```
-
----
-
-## 🗺️ Maps
-
-A **Map** is a collection of key-value pairs. Each key is unique.
-
-```dart
-Map<String, int> marks = {
-  "Ravaan": 10,
-  "Navaan": 15,
-  "Other": 30
-};
-
-print(marks["Ravaan"]);         // Output: 10
-print(marks["name"]?.length);   // null safety
-```
-
-### 🔧 Map Operations
-
-```dart
-// Add multiple entries
-marks.addAll({
-  "John": 40,
-  "Doe": 50
-});
-
-// Remove key
-marks.remove("Other");
-
-// Loop using index
-for (int i = 0; i < marks.length; i++) {
-  print(marks.keys.toList()[i]);
-  print(marks.values.toList()[i]);
-}
-
-// Loop using forEach
-marks.forEach((key, value) {
-  print('$key: $value');
-});
-```
-
----
-
-## 🧾 Enums
-
-Use enums to define a fixed set of named constants.
-
-```dart
-enum EmployeeType {
-  swe,
-  finance,
-  marketing
-}
-```
-
-Use in class:
-
-```dart
-class Employee {
-  final String name;
-  final EmployeeType type;
-
-  Employee(this.name, this.type);
-}
-```
-
----
-
-## 🚀 Enhanced Enums
-
-You can associate values and even methods with enums.
-
-```dart
-enum EmployeeType {
-  swe(2500),
-  finance(2000),
-  marketing(2200);
-
-  final int salary;
-  const EmployeeType(this.salary);
-}
-```
-```dart
-  finance(2000),
-  marketing(2200);
-
-  final int salary;
-  const EmployeeType(this.salary);
-}
-```
-
-## ✅ Enum with Constructor
-```dart
-enum EmployeeType {
-  finance(2000),
-  marketing(2200);
-
-  final int salary;
-  const EmployeeType(this.salary);
-}
 ```
 
 ---
