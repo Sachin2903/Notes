@@ -1742,9 +1742,11 @@ ScaffoldMessenger.of(context).showSnakBar(SnaCKbAR(content:Text("hello")))
 ```
 
 >> to listner put 
+```dart
 Provider.of<CardProvider>(context).cart inside build
 or
 final cart=context.watch<CartProvider>().cart
+```
 ## SHow Dialog
 ```dart
 onPressedL(){
@@ -1768,8 +1770,122 @@ ShowDialog(
 ```
 
 ## MultiProvider
+```dart
 MultiProvider(
   provider:[
     ChangeNotifierProvider(create:(context)=>CartProvider())
   ]
 )
+```
+
+context.read() cannot be called in build function
+
+context.watch() cannot be called outside build
+
+## Watch
+```dart
+final cart=context.watch<CartProvider>().cart
+```
+
+this rerender complete widget . to unneccessary completereneder we use
+
+Consumer<Counter>(builder:(context,counter,child){
+  return Text(`$counter.counter`)
+})
+
+## Stream Provider
+StreamProvider<String>(
+  initailData:1,
+  create:(context)=>Stream.periodic(const DUration(seconds:1),(x)=>x).take(10),
+  child:const MyApp()
+)
+context.watch<int>();
+Provider.of<int>(context);
+
+## Future Provider
+FutureProvider<String>{
+  initailData:"Loading",
+  create:(context)=>someFutre,
+  child:const MyApp()
+}
+
+## Proxy Provider
+when one provider depend on another provider value 
+ 
+```dart
+class SecondClass{
+  final FIrebaseAuth auth;
+  SecondClass({
+    required this.auth;
+  })
+
+  void createWhatever(){
+
+  }
+
+}
+
+reunApp(
+  MultiProvider(
+    providers:[
+      Provider(create:(context)=>FirebaseAuth.instance),
+      ProxyProvider<FirebaseAuth,SecondClass>(
+        update:(context,value,previous){
+          return SecondClass(auth:value);
+        }
+      )
+    ],
+    child:const MyApp()
+  )
+)
+
+```
+
+## Media query
+final size=MediaQuery.of(context).size;
+or
+final size=MediaQuery.sizeOf(context);
+GridView() // when know the number of items it have
+GridView.builder() // when do not know the number of items it have
+
+
+GridView.builder(
+  itemCOunt:product.length,
+  gridDelegate:SliverGridDelegateWithFixedCrossAxisCount(
+  crossAxisCount:2,
+  childAspectRatio:2,
+),
+itemBuild:(context,index){
+  final product=product[index];
+  return 
+}
+)
+
+child :size.width>650?WidgetSecond:WidgetOne
+
+## InheritedWidget vs InheritedModel
+
+
+## LayoutBuilder Widget
+LayoutBUilder(builder:(context,constraints){
+constraints.maxHeight
+constraints.minHeight
+constraints.maxWidth;
+constraints.maxWidth;
+
+these give the constraint of parent WIdget. the layoutbuilder is in
+})
+
+
+LayoutBUilder(builder:(context,constraints){
+return Text("Hello")
+})
+
+
+
+
+
+
+
+
+
