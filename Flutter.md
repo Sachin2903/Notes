@@ -1885,6 +1885,193 @@ return Text("Hello")
 
 
 
+## Deply in playstore
+
+In yaml file
+```yaml
+dependencies:
+   flutter_launcher_icons: ^0.13.1 
+
+#  >> flutter pub get
+
+flutter_icons:
+   android:"launcher_icon"
+   ios:true
+   remove_alpha_ios:true
+   image_path:"assests/icon/icon.png"
+
+```
+>> flutter pub run flutter_launcher_icons:main
+
+add these permission in AndroidManifest.xml
+```xml
+ <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+```
+
+###### this will generate new keys so we could upload new updates
+
+keytool -genket -v -keystore ~/etechviral.jks -keyalg RSA -keysize 2048 -validity 10000 -alias etechviral
+
+enter password
+
+yes
+
+this generate a file 
+add that file in android/app file in android 
+
+
+
+
+###### now need to add afile 
+key.properties
+```dart
+//  password from previous steps
+storePassword=123456789
+// password from previous steps
+keyPassword=123456789
+// upload
+keyAlias= etechviral
+// keystore file location
+storeFile=etechviral.jks
+
+```
+
+###### in build griddle file
+/andoid/app/build.gridle.kts
+
+```kts
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file('key.properties')
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
+android {}
+ 
+   signingConfigs {
+        release {
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+            storePassword keystoreProperties['storePassword']
+        }
+    }
+
+builTypes
+debug to release
+  release {
+            // TODO: Add your own signing config for the release build.
+            // Signing with the debug keys for now, so `flutter run --release` works.
+           // signingConfig = signingConfigs.debug
+           signingConfig signingConfigs.release
+        }
+```
+
+>> flutter clean
+>> flutter build appbundle or flutter build apk
+
+location:-
+/android /build/app/output/bundle/release/apk
+
+
+// login to playconsole 
+add new --> 
+
+main store listing 
+set name , description 
+
+peoduction 
+ceate new realease
+
+add file in ap bundle
+
+send chnages for review
+
+## Deply in appstore
+
+In yaml file
+```yaml
+dependencies:
+   flutter_launcher_icons: ^0.13.1 
+
+#  >> flutter pub get
+
+flutter_icons:
+   android:"launcher_icon"
+   ios:true
+   remove_alpha_ios:true
+   image_path:"assests/icon/icon.png"
+
+```
+>> flutter pub run flutter_launcher_icons:main
+
+
+###### register a bundle id
+in developer.apple.com
+certificates , identifiers & Profiles
+
+add flutter_launcher_icons: ^0.13.1 in yaml file
+
+flutter_icons:
+android:"launcher_icon"
+ios:true,
+image_path:"assests/icon/icon.png"
+
+
+flutter pub run flutter_launcher_icons:main
+
+##### app name
+iso --> Runner.xcworkspace --> xcshareeddata
+
+###### open iso file in x-code
+
+###### click on runner > runner > signing & certificates > 
+tick on automatic signing > select team > can change bundle identifier ( unique )
+
+###### in app store
+register an app ids > app ids
+> app > description > bundle id (explicit ) > set capabilities > register
+
+###### app store connect > my appp > new app 
+platofrm > ios > name >language > select bundle id > sku > fulll access >  
+
+###### register a device
+device iso
+device id (uuid) (apple id)
+done 
+
+signing certificate apple development 
+ try agian
+
+
+
+###### create build 
+flutter build ios --no-sound-null-safety
+
+###### create archive file
+> general 
+minimum deplyments
+
+> identity
+
+product > scheme > runner must be selected
+> destination > select any ios devices
+
+###### create archive
+producrt > archive > a window will pop up or go window > organiser
+
+> distribute app > app store aconnect > upload > next automaticallt manage singing > upload 
+appstore > check build > if application comes > add(plus icons) > select > add for review
+
+make sure to have a look in runner > runner > info
+
+
+add sing > save > app for review
+
 
 
 
