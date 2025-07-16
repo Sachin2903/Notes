@@ -1,90 +1,5 @@
+#                            Flutter  
 
-## Flutter Setup on Linux
-
-#### 1. System Dependencies
-
-Update your system and install required packages:
-
-```bash
-sudo apt-get update -y && sudo apt-get upgrade -y
-sudo apt-get install -y curl git unzip xz-utils zip libglu1-mesa
-```
-
-#### 2. Android Development Dependencies
-
-Install required 32-bit libraries for Android app development:
-
-```bash
-sudo apt-get install libc6:amd64 libstdc++6:amd64 lib32z1 libbz2-1.0:amd64
-```
-
-Install **Android Studio**:
-
-```bash
-sudo snap install android-studio --classic
-```
-
-After installation:
-- Open **Android Studio**
-- Install the **Flutter** and **Dart** plugins from the plugin marketplace.
-
----
-
-#### 3. Download and Install Flutter SDK
-
-Download the Flutter SDK and extract it to your development directory:
-
-```bash
-sudo tar -xf ~/Videos/flutter_linux_3.29.2-stable.tar.xz -C /usr/development
-```
-
----
-
-#### 4. Set Up Environment Variables
-
-To use `flutter` commands globally, add it to your `PATH`.
-
-### Edit your shell config file (`.bashrc` or `.bash_profile`):
-
-```bash
-nano ~/.bashrc
-```
-
-Add the following line to the end of the file:
-
-```bash
-export PATH="/usr/development/flutter/bin:$PATH"
-```
-
-Save and close:
-- Press `Ctrl + X`
-- Then `Y`
-- Press `Enter`
-
-Apply the changes:
-
-```bash
-source ~/.bashrc
-```
-
----
-
-#### 5. Verify Installation
-
-Test your Flutter installation:
-
-```bash
-flutter --version
-```
-
-You should see the Flutter version output if everything is set up correctly.
-
-##### flutter doctor --android-licenses
-
-##### flutter docker
-
-## create flutter project
-> flutter create currency_converter
 
 ## Flutter Setup on Linux
 
@@ -635,7 +550,9 @@ class _Currency extends State{
   @override
   Widget build(BuildContext context) {
   int result=0;
+
      final TextEditingController textEditingController=TextEditingController();
+
     return  Scaffold(
       backgroundColor: Colors.cyan,
       appBar: AppBar(
@@ -679,6 +596,7 @@ class _Currency extends State{
                   filled: true,
 
                   // contentPadding: ,
+                  // border: InputBorder.none,
                   fillColor: Colors.white,
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(
@@ -718,6 +636,56 @@ class _Currency extends State{
     );
   } 
 }
+```
+
+## textEditingController
+```dart
+final TextEditingController textEditingController=TextEditingController();
+
+textEditingController.value
+
+@override
+  void initState() {
+    super.initState();
+    textEditingController.addListener(() {
+      setState(() {}); // Rebuild when text changes
+    });
+  }
+
+@override
+dispose(){
+  super.dispose()
+  textEditingController.dispose();
+}
+```
+
+## container border
+```dart
+Container(
+  padding: EdgeInsets.all(16),
+  decoration: BoxDecoration(
+    border: Border.all(
+      color: Colors.blue,
+      width: 2,
+    ),
+    borderRadius: BorderRadius.circular(8), // optional rounded corners
+  ),
+  child: Text("I'm in a bordered container!"),
+)
+```
+## button border 
+```dart
+OutlinedButton(
+  onPressed: () {},
+  style: OutlinedButton.styleFrom(
+    side: BorderSide(color: Colors.blue, width: 2),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(12),
+    ),
+  ),
+  child: Text("Outlined Button"),
+)
+
 ```
 
 ## FLows in  StatefullWIdget
@@ -835,6 +803,8 @@ class _MyWidgetState extends State<MyWidget> {
                 fontSize: 35,
                 fontWeight: FontWeight.bold,
                 color: Color.fromARGB(255, 255, 255, 255),
+                background:Paint()..color= Color(0xFF30100A)
+                // or  Color(0xFF3498db), 
               ),
             ),
             Padding(
@@ -875,6 +845,20 @@ class _MyWidgetState extends State<MyWidget> {
     );
   }
 }
+```
+
+## Padding 
+
+```dart
+padding: EdgeInsets.all(8.0),
+
+padding: EdgeInsets.only(left: 10.0, top: 5.0),
+padding: EdgeInsets.only(right: 10.0, bottom: 5.0),
+
+padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+padding: EdgeInsets.fromLTRB(10.0, 20.0, 30.0, 40.0),
+padding: EdgeInsets.zero,
+
 ```
 
 ## didChangeDependencies
@@ -1595,6 +1579,18 @@ Navigator.of(context).push(
   ),
 );
 
+Navigator.of(context).pushAndRemoveUntil(
+        PageRouteBuilder(
+          pageBuilder:
+              (context, animation, secondaryAnimation) => const Login(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return FadeTransition(opacity: animation, child: child);
+          },
+          transitionDuration: const Duration(milliseconds: 500),
+        ),
+        (Route<dynamic> route) => false,
+      );
+
 
 // for transition
  Navigator.of(context).push(MaterialPageRoute(builder:(context){
@@ -1626,6 +1622,36 @@ transitionsBuilder: (context, animation, secondaryAnimation, child) {
     child: child,
   );
 }
+
+```
+
+## Local Storage
+```dart
+ shared_preferences: ^2.2.2
+
+import 'package:shared_preferences/shared_preferences.dart';
+
+ final prefs = await SharedPreferences.getInstance();
+
+await prefs.setString('username', 'PujaDivine');
+  await prefs.setBool('isLoggedIn', true);
+String? username = prefs.getString('username');
+  bool? isLoggedIn = prefs.getBool('isLoggedIn');
+ await prefs.remove('username');
+ await prefs.clear();
+
+
+ Supported types
+String
+
+int
+
+double
+
+bool
+
+List<String>
+
 
 ```
 
@@ -1861,7 +1887,7 @@ itemBuild:(context,index){
 }
 )
 
-child :size.width>650?WidgetSecond:WidgetOne
+child :size.width>650?WidgetSecond:WidgetOne 
 
 ## InheritedWidget vs InheritedModel
 
@@ -1882,6 +1908,271 @@ return Text("Hello")
 })
 
 
+## ReBuild
+setState()	Simple cases, whole widget update is fine
+```dart
+setState(() {
+  // Change your state variables here
+});
+```
+
+###### ValueNotifier	Lightweight, fast updates to small widgets
+```dart
+ValueNotifier<String?> tokenNotifier = ValueNotifier<String?>(null);
+
+@override
+void initState() {
+  super.initState();
+  _initializeToken();
+}
+
+Future<void> _initializeToken() async {
+  final savedToken = await getTokenFromPrefs();
+  tokenNotifier.value = savedToken;
+}
+
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    body: Center(
+      child: ValueListenableBuilder<String?>(
+        valueListenable: tokenNotifier,
+        builder: (context, value, child) {
+          if (value == null) return CircularProgressIndicator();
+          return Text("Token: $value");
+        },
+      ),
+    ),
+  );
+}
+
+```
+
+## do not show System top and bottom
+SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
+
+SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge); // or manual restore
+
+
+## Get
+Function	Description	Example
+Get.to()	Navigate to a new screen without removing the current screen.	Get.to(() => ProfileScreen())
+Get.back()	Navigate back to the previous screen.	Get.back()
+Get.off()	Navigate to a new screen and remove the current screen.	Get.off(() => HomeScreen())
+Get.offAll()	Navigate to a new screen and clear the entire stack.	Get.offAll(() => HomeScreen())
+Get.toNamed()	Navigate to a named route.	Get.toNamed('/profile')
+Get.offNamed()	Navigate to a named route and remove the current screen.	Get.offNamed('/home')
+Get.until()	Navigate to a screen and pop until a specific route is found.	Get.until((route) => route.settings.name == '/home')
+Get.dialog()	Show a dialog or popup.	Get.dialog(AlertDialog(...))
+
+## Global Key
+this help in accessing 
+GlobalKey<CurvedNavigationBarState> bottomNavigationKey = GlobalKey();
+
+## PullToRefresh
+```dart
+pullToRefreshController = PullToRefreshController();
+pullToRefreshController = PullToRefreshController(
+      settings: PullToRefreshSettings(
+          color: Color(0xFFA30100), slingshotDistance: 2 // Customize as needed
+          ),
+      onRefresh: () async {
+        _walletService.fetchCoins();
+        if (_webViewController != null) {
+          await _webViewController?.reload();
+
+          pullToRefreshController?.endRefreshing();
+        }
+      },
+    );
+pullToRefreshController.callRefresh();
+pullToRefreshController?.endRefreshing();
+```
+
+## wantKeepAlive
+```dart 
+wantKeepAlive => true tells Flutter to keep your widget alive even when it's not visible, useful in tabbed views.
+```
+
+## checkForConnectivity()
+```dart
+void _checkForConnectivity() {
+    Connectivity().onConnectivityChanged.listen((result) {
+      setState(() {
+        debugPrint("check this $result");
+        isNoConnection = result == ConnectivityResult.none;
+      });
+    });
+  }
+```
+
+## Lifecycle of a Web Page in InAppWebView
+```dart
+onWebViewCreated → onLoadStart → onProgressChanged (multiple times) 
+→ onPageCommitVisible → onLoadStop → onTitleChanged → onUpdateVisitedHistory
+```
+
+## phone bar
+```dart
+   SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.white, // 🔁 change to your desired color
+        statusBarIconBrightness: Brightness.dark, // for dark icons on light bg
+      ),
+    )
+```
+
+## Animation 
+```dart
+import 'package:flutter/material.dart';
+
+class SkeletonLoader extends StatefulWidget {
+  const SkeletonLoader({super.key});
+
+  @override
+  State<SkeletonLoader> createState() => _SkeletonLoaderState();
+}
+
+class _SkeletonLoaderState extends State<SkeletonLoader> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<Color?> _colorAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 1), 
+    )..repeat(reverse: true); 
+
+    _colorAnimation = ColorTween(
+      begin: Colors.grey[300],
+      end: Colors.grey[100],
+    ).animate(_controller);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _colorAnimation,
+      builder: (context, child) {
+        return Container(
+          width: 356,
+          height: 181,
+          decoration: BoxDecoration(
+            color: _colorAnimation.value,
+            borderRadius: BorderRadius.circular(12),
+          ),
+        );
+      },
+    );
+  }
+}
+```
+
+## Absolute 
+Stack(
+      clipBehavior: Clip.none,
+      children:[
+container(),
+        Positioned(
+          top: -8,
+          right: 8,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 4),
+            decoration: BoxDecoration(
+              color: themeColor,
+              border: Border.all(color: Colors.white, width: 2),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Text(
+              pujaData["time"] ?? "",
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+      ]
+
+
+## Camera and moc permission
+```dart
+   dynamic permissioncamera= await Permission.camera.request();
+    dynamic permissionmic=await Permission.microphone.request();
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1894,15 +2185,15 @@ dependencies:
 
 #  >> flutter pub get
 
-flutter_icons:
+flutter_launcher_icons:
    android:"launcher_icon"
    ios:true
    remove_alpha_ios:true
    image_path:"assests/icon/icon.png"
 
 ```
->> flutter pub run flutter_launcher_icons:main
 
+>> flutter pub run flutter_launcher_icons
 add these permission in AndroidManifest.xml
 ```xml
  <uses-permission android:name="android.permission.INTERNET"/>
@@ -1914,7 +2205,10 @@ add these permission in AndroidManifest.xml
 
 ###### this will generate new keys so we could upload new updates
 
-keytool -genket -v -keystore ~/etechviral.jks -keyalg RSA -keysize 2048 -validity 10000 -alias etechviral
+keytool -genkey -v -keystore ~/etechviral.jks -keyalg RSA -keysize 2048 -validity 10000 -alias etechviral
+
+// keytool -genkey -v -keystore ~/pujadivine_key.jks -keyalg RSA -keysize 2048 -validity 10000 -alias pujadivine
+
 
 enter password
 
@@ -1922,9 +2216,6 @@ yes
 
 this generate a file 
 add that file in android/app file in android 
-
-
-
 
 ###### now need to add afile 
 key.properties
@@ -2071,8 +2362,6 @@ make sure to have a look in runner > runner > info
 
 
 add sing > save > app for review
-
-
 
 
 

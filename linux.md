@@ -544,3 +544,110 @@ logical volumes and physical volume mount and anmount above
  extend logical storage size
 
  > lvextend -L +5G /dev/tws_vg/tws_lv
+
+
+ 
+# 🐍 Python Virtual Environment in Linux (Quick Guide)
+
+This guide helps you create, use, and delete a Python virtual environment (VM) safely on any Linux system.
+
+---
+
+## ✅ Step 1: Install Required Package
+
+To use Python virtual environments, install the built-in `venv` module and `ffmpeg` (if you're using tools like Whisper):
+
+```bash
+sudo apt update
+sudo apt install python3-venv ffmpeg
+```
+
+---
+
+## ✅ Step 2: Create a Virtual Environment
+
+```bash
+python3 -m venv myenv
+```
+
+- This creates a folder named `myenv/` in your current directory.
+- All packages you install while this environment is active will be stored here.
+
+---
+
+## ✅ Step 3: Activate the Virtual Environment
+
+```bash
+source myenv/bin/activate
+```
+
+Once activated, your terminal will look like this:
+
+```
+(myenv) user@yourpc:~$
+```
+
+You're now working **inside** the virtual environment.
+
+---
+
+## ✅ Step 4: Install Packages Inside the Virtual Environment
+
+```bash
+pip install package-name
+```
+
+For example, to install OpenAI Whisper:
+
+```bash
+pip install openai-whisper
+```
+
+This will only install it inside `myenv`, not globally.
+
+---
+
+## ✅ Step 5: Deactivate the Virtual Environment
+
+```bash
+deactivate
+```
+
+This returns you to the system Python environment. Your `(myenv)` tag will disappear from the terminal prompt.
+
+---
+
+## ✅ Step 6: Delete the Virtual Environment
+
+If you're done and want to clean up:
+
+```bash
+rm -rf myenv
+```
+
+This permanently deletes the virtual environment folder.
+
+---
+
+## 🧠 Why Use a Virtual Environment?
+
+- Keeps your system Python clean.
+- Lets you test multiple versions of packages without conflict.
+- Useful for managing dependencies in different projects.
+
+---
+
+## 📝 Quick Commands Recap
+
+| Task                        | Command                              |
+|-----------------------------|---------------------------------------|
+| Install venv tool           | `sudo apt install python3-venv`      |
+| Create virtual environment  | `python3 -m venv myenv`              |
+| Activate environment        | `source myenv/bin/activate`          |
+| Install a package           | `pip install package-name`           |
+| Deactivate environment      | `deactivate`                         |
+| Delete virtual environment  | `rm -rf myenv`                       |
+
+---
+
+> You can have multiple virtual environments for different projects. Just give them different folder names (e.g., `venv-whisper`, `venv-django`, etc).

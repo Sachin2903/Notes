@@ -16,3 +16,14 @@ work items --> Bug , Task , Feature
 * Scrum 
 * CMMI
   
+### version control
+a repo can be clone with http and ssh and can be clone in IDE
+
+git config 
+
+### pipline
+###### build and release pipline
+
+
+
+
