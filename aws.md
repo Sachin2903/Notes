@@ -258,11 +258,99 @@ handling tasks like backup, patching , monitoring , scaling
 
 EC2 (Docker node-app)
 
+## Amazon DynamoDB deals with no-SQL
+
+## Lambda Function
+is a serverless computing serviec that lets you run code in response to events without managin servers.
+
+you just upload your code and aws automatically handles the rest, scaling as needed and only charging for the time you code runs.
+
+these events can come from many different AWS services like S3 (file uploads),
+DynamoDB (database changes)
+, API gateway
+, cloudWatc
+
+parallel execution
+
+## AWS Cloud Formation
+AWS CloudFormation is a infrastructure as code service that lets you define, provision and manage AWS resources in a declarative, template based format.
+
+>> automate AWS task using file  JSON, Yaml
+
+```json
+Resource:
+ SimpleEC2Instance:
+   Type: "AWS::EC2::Instance"
+   Properties:
+     InstanceType: t3.micro
+     ImageId: ami-02adasdas # AMI ID for your region
+     Tags:
+       - Key: Name
+         Value: MySimpleInstance 
+
+```
+
+it mamage state
+CloudFormation Stack Owns Its Resources
+
+When you create an EC2 instance via a CloudFormation template (YAML or JSON), AWS creates a stack — this stack owns all resources created by that template.
+
+ create stack -->
+
+## Route 53 Service
+is a scalable DNS service for domain registration, traffic routing and health checking capabilities
 
 
+Default Port for DNS service is 53
 
+Have new domain in it or register existing in Hosted Zone
 
+A record (IPV4) Maps a domain name to an IPV4 address
 
+AAAA Record (IPV6) maps a domain name to an IPV6 adress
+
+CNAME Record Maps a domain name to another domain name (alias)
+
+MX Record Direct mail to an email server
+
+## AWS CloudFront CDN
+is a Content Delivery Network that speeds up the delivery of web content to users by caching it at servers close to them, improving load times and performance globally
+
+## VPC (Virtual Private Cloud)
+ it is a private isolated network within the AWS cloud where you can launch and manage your resource securely
+
+region-mumbai
+ MY-VPC
+
+When you create a VPC, you specify a CIDR block that define the IP address range for the entire VPC 
+
+10.0.0.0/16
+
+this block allows for 65536 IP adresses (but in reality, 65531 usable addresses).
+
+CIDR (Classless inter-domain routing) is a method t=for allocating IP adresses and routing internet protocol (IP) packets.
+
+## AWS Amplify
+is a platform that simplifies 
+building 
+deploygin and
+hosting full stack web and mobile apps.
+
+## AWS ECS 
+Elastic container service
+
+is a cloud-based container management service that allows you to run and manage Docker containers on a cluster of virtual servers.
+
+Cluster: Group of tasks and services, hosts all the resources and infrastructure.
+
+Service: Handles Scalability and load balancing of container.
+
+Task: Represents the running containers of you application
+
+## EKS Elastic Kubernetes Service (Amazon EKS)
+Fully managed KUbernetes cluster infrastructure
+
+## terraform
 
 
 
