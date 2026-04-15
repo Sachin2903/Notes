@@ -1144,12 +1144,331 @@ repo.findById(id)
     );
 ```
 
-2.22
+###### HttpStatus
+Use Case	       Status
+Get data	       200
+Create	           201
+Delete	           204
+Invalid input	   400
+Not logged in	   401
+No permission	   403
+Not found	       404
+Duplicate	       409
+Validation error   422
+Server error	   500
+
+###### ResponseEntity
+1. OK Response (200)
+return ResponseEntity.ok(data);
+
+2. Custom Status
+return new ResponseEntity<>(data, HttpStatus.CREATED);
+
+3. No Content (204)
+return ResponseEntity.noContent().build();
+
+4. Not Found (404)
+return ResponseEntity.notFound().build();
+
+5. Bad Request (400)
+return ResponseEntity.badRequest().body("Invalid input");
+
+📦 Adding Headers
+HttpHeaders headers = new HttpHeaders();
+headers.add("Custom-Header", "value");
+
+return new ResponseEntity<>(data, headers, HttpStatus.OK);
 
 
+1. Using Builder Pattern
+return ResponseEntity
+        .status(HttpStatus.CREATED)
+        .header("X-App", "Demo")
+        .body(data);
+
+###### Repository functions
+1. Basic CRUD Methods (Most Used)
+findAll()                Get all records
+findById(id)             Get one by ID (Optional)
+existsById(id)           Check if exists
+count()                  Total records
+save(entity)             Insert or update
+saveAll(list)            Bulk save
+deleteById(id)           Delete by ID
+delete(entity)           Delete entity
+deleteAll()              Delete all records
 
 
+2. Custom Query Methods (Very Common 🚀)
+Spring auto-generates queries based on method names:
+
+findByName(String name)
+findByStatus(String status)
+findByNameAndStatus(String name, String status)
+findByPriceGreaterThan(double price)
+findByCreatedAtBetween(Date start, Date end)
+
+3. Pagination
+Pageable pageable = PageRequest.of(0, 10, Sort.by("name").ascending());
+categoryRepository.findAll(pageable);
+
+Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).descending());
+return categoryRepository.findAll(pageable);
+
+Pageable pageable = PageRequest.of(0, 10);
+Page<Category> result = categoryRepository.findByStatus("ACTIVE", pageable);
+
+Pageable pageable = PageRequest.of(
+    0,
+    10,
+    Sort.by("name").ascending().and(Sort.by("createdAt").descending())
+);
+
+Pageable pageable = PageRequest.of(0, 10);
+categoryRepository.findByNameContaining("food", pageable);
+
+4. Custom JPQL/SQL
+@Query("SELECT c FROM Category c WHERE c.name = :name")
+Category getByName(@Param("name") String name);
+
+deleteByName(String name)
+
+5. Optional Handling
+Category category = categoryRepository.findById(id)
+    .orElseThrow(() -> new RuntimeException("Not found"));
+
+###### Params & Query
+```java
+@PostMapping("/update/{id}")
+public ResponseEntity<CategoryDto> updateCategory(
+        @PathVariable Long id,
+        @RequestParam(required = false) String status,
+        @RequestBody CategoryDto categoryDto) {
+
+    return ResponseEntity.ok(
+        categoryService.updateCategory(id, status, categoryDto)
+    );
+}
+```
+
+above
+Rest api and h2 jdbc database 
+
+### SQL DB Configuration
+
+<dependency>
+      <groupId>com.mysql</groupId>
+      <artifactId>mysql-connector-j</artifactId>
+      <scope>runtime</scope>
+</dependency>
+
+```bash
+mvn clean install
+```
+
+add this in pom file form java spring boot initializer pom file
+
+```
+spring.application.name=demo
+server.port=8080
+spring.datasource.url=jdbc:mysql://localhost:3306/mydb
+spring.datasource.username=mysql
+spring.datasource.password=mysqlpass
+
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQLDialect
+```
+
+```bash
+sudo apt install mysql-server -y     # install MySQL
+sudo systemctl start mysql           # start service
+sudo systemctl enable mysql          # auto-start on boot
+sudo mysql -u root -p                # login
+mysqlpass                            # password , can we any
+```
+###### MY SQL GUI in linux
+```bash
+sudo snap install dbeaver-ce --classic
+dbeaver
+Host: localhost
+Port: 3306
+Database: mydb
+Username: mysql (or root)
+Password: your password
+```
+
+```sql
+
+CREATE DATABASE mydb;
+
+CREATE USER 'springuser'@'localhost' IDENTIFIED BY 'password123';
+
+GRANT ALL PRIVILEGES ON mydb.* TO 'springuser'@'localhost';
+
+FLUSH PRIVILEGES;
+
+mysql -u springuser -p
+```
+
+👉 IDENTIFIED BY means:
+
+➡️ “Set a password for this user”
+
+👉 'user'@'host' = who + from where
+👉 localhost = same machine
+👉 % = anywhere
+👉 IP = restricted access
+
+### Global Exception handling
+1. Optional
+
+@Repository
+public interface CategoryRepository extends JpaRepository<Category,Long> {
+       Optional<Category> findByName(String name);
+}
+
+ Optional<Category> optional=categoryRepository.findByName(categoryDto.getName());
+        if(optional.isPresent()){
+            throw new RuntimeException("Category already exist");
+}
+
+or 
+package com.example.demo.exception;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+@ResponseStatus(value= HttpStatus.CONFLICT)
+public class CategoryAlreadyExistsException extends  RuntimeException{
+    
+    public CategoryAlreadyExistsException(String message){
+        super(message);
+    }
+}
+
+  if(optional.isPresent()){
+            throw new CategoryAlreadyExistsException("Category already exist");
+  }
+
+2. use try catch 
+
+ @PostMapping({"/v1/create", "/v2/create"})
+    public ResponseEntity<?> createCategory(@RequestBody CategoryDto categoryDto){
+        try{
+            CategoryDto savedCategory=this.categoryService.createCategoryService(categoryDto);
+            return new ResponseEntity<>(savedCategory,HttpStatus.CREATED);
+        }catch(CategoryAlreadyExistsException error){
+return new ResponseEntity<>(error.getMessage(),HttpStatus.CONFLICT);            
+        }
+    }
+
+3. use apiResponse Class
+public class ApiResponse<T> {
+    private boolean success;
+    private String message;
+    private T data;
+
+    public ApiResponse(boolean success, String message, T data) {
+        this.success = success;
+        this.message = message;
+        this.data = data;
+    }
+}
+@PostMapping({"/v1/create", "/v2/create"})
+public ResponseEntity<ApiResponse<CategoryDto>> createCategory(@RequestBody CategoryDto categoryDto) {
+    try {
+        CategoryDto savedCategory = this.categoryService.createCategoryService(categoryDto);
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new ApiResponse<>(true, "Category created", savedCategory));
+
+    } catch (CategoryAlreadyExistsException error) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(new ApiResponse<>(false, error.getMessage(), null));
+    }
+}
+
+4. global exception handling
+
+```java
+package com.example.demo.exception;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import java.lang.module.ResolutionException;
+
+@ControllerAdvice
+public class GlobalExceptionHandler {
+    
+    
+    @ExceptionHandler(CategoryAlreadyExistsException.class)
+    public ResponseEntity<String> handleCategoryAlreadyExistsException(CategoryAlreadyExistsException ex){
+        return new ResponseEntity<>(ex.getMessage(),HttpStatus.CONFLICT);
+        
+    }
+    
+}
+```
+
+or
+if want to handle all runtime exception
+```java
+@ExceptionHandler(RuntimeException.class)
+public ResponseEntity<String> handleRuntimeException(RuntimeException ex){
+    return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+}
+```
+
+###### web request
+```java
+
+@ControllerAdvice
+public class GlobalExceptionHandler {
+    
+    
+    @ExceptionHandler(CategoryAlreadyExistsException.class)
+    public ResponseEntity<String> handleCategoryAlreadyExistsException(CategoryAlreadyExistsException ex,WebRequest webReqest){
+        
+        return new ResponseEntity<>(ex.getMessage(),HttpStatus.CONFLICT);
+        
+    }
+    
+}
+
+webRequest.getDescription(false)  // TO GET API PATH
+String token = webRequest.getHeader("Authorization");
+String id = webRequest.getParameter("id");
+Iterator<String> params = webRequest.getParameterNames();
+Object attr = webRequest.getAttribute("name", WebRequest.SCOPE_REQUEST);
+
+String path = webRequest.getDescription(false).replace("uri=", "");
 
 
+or
 
+@ExceptionHandler(RuntimeException.class)
+public ResponseEntity<ErrorResponse> handleRuntimeException(
+        RuntimeException ex,
+        HttpServletRequest request) {
 
+    String path = request.getRequestURI();
+
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .body(new ErrorResponse(ex.getMessage(), path));
+}
+
+request.getRequestURI();   // /v1/create
+request.getMethod();       // POST
+request.getRemoteAddr();   // IP
+request.getHeader("Authorization");
+request.getQueryString();
+```
+
+### swagger 
+4.30
+it a tool used to share api documention to other developers
