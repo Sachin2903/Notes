@@ -1470,5 +1470,181 @@ request.getQueryString();
 ```
 
 ### swagger 
-4.30
-it a tool used to share api documention to other developers
+```bash
+<dependency>
+    <groupId>org.springdoc</groupId>
+    <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+    <version>2.5.0</version>
+</dependency>
+```
+
+http://localhost:8080/swagger-ui.html
+
+
+```java
+@OpenAPIDefinition(
+    info = @Info(
+        title = "My API",
+        version = "1.0",
+        description = "API documentation using Swagger",
+        termsOfService = "https://example.com/terms",
+        contact = @Contact(
+            name = "Sachin",
+            email = "sachin@example.com"
+        ),
+        license = @License(
+            name = "Apache 2.0",
+            url = "https://apache.org"
+        )
+    ),
+    servers = {
+        @Server(url = "http://localhost:8080", description = "Local"),
+        @Server(url = "https://api.prod.com", description = "Production")
+    },
+    tags = {
+        @Tag(name = "Auth", description = "Authentication APIs"),
+        @Tag(name = "User", description = "User APIs")
+    },
+    security = {
+        @SecurityRequirement(name = "bearerAuth")
+    }
+)
+@SecurityScheme(
+    name = "bearerAuth",
+    type = SecuritySchemeType.HTTP,
+    scheme = "bearer",
+    bearerFormat = "JWT"
+)
+@SpringBootApplication
+public class DemoApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(DemoApplication.class, args);
+    }
+}
+```
+
+## Spring Security
+### Basic Auth
+simple method where user privide a userame and password with each request
+
+>> Authentication && Authorization
+
+1. add security dependency
+
+```xml
+<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+```
+>> after adding this no api will return data
+to use api we need a password and a user password will be shared in terminal once above dependecy run and can be used in authorization basic auth username and password
+
+```java
+@Configuration
+@EnableWebSecurity
+@EnableMethodSecurity(prePostEnabled = true)
+public class SecurityConfig {
+
+    @Bean
+    public SecurityFilterChain securityFilter(HttpSecurity http) throws Exception {
+        http.csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(request -> request
+                        .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
+                        .anyRequest().authenticated()
+                );
+
+        return http.build();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public UserDetailsService userDetailsService() {
+        UserDetails admin = User.builder().username("admin").password(passwordEncoder().encode("admin")).roles("ADMIN").build();
+        UserDetails seller = User.builder().username("seller").password(passwordEncoder().encode("seller")).roles("SELLER").build();
+
+        return new InMemoryUserDetailsManager(admin,seller);
+
+    }
+}
+
+
+// Authorization
+@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+@PreAuthorize("hasAnyRole('ADMIN','SELLER')")
+@PreAuthorize("hasAnyRole('ADMIN','SELLER')")
+@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("#id == authentication.principal.id")
+
+@PostMapping({"/v1/create", "/v2/create"})
+
+@PreAuthorize("hasRole('ADMIN') or hasRole('SELLER')")
+@PostMapping("/product")
+public void addProduct() {}
+
+
+@PostAuthorize("returnObject.owner == authentication.name")
+@GetMapping("/order/{id}")
+public Order getOrder(@PathVariable Long id) {
+    return orderService.getOrder(id);
+}
+ this use to block the respnose
+
+.requestMatchers("/admin/**").hasRole("ADMIN")
+.requestMatchers("/seller/**").hasAnyRole("SELLER", "ADMIN")
+```
+
+###### credential in DB
+```java
+@Entity
+public class User {
+
+    @Id
+    @GeneratedValue
+    private Long id;
+
+    private String username;
+    private String password;
+    private String role; // e.g. ROLE_ADMIN
+
+}
+
+public interface UserRepository extends JpaRepository<User, Long> {
+    Optional<User> findByUsername(String username);
+}
+
+@Service
+public class CustomUserDetailsService implements UserDetailsService {
+
+    private final UserRepository userRepository;
+
+    public CustomUserDetailsService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        return org.springframework.security.core.userdetails.User.builder()
+                .username(user.getUsername())
+                .password(user.getPassword())
+                .authorities(user.getRole()) // must be ROLE_*
+                .build();
+    }
+}
+
+```
+
+### JWT TOKEN Based Authentication
+JSON web token is a secure way to send information between two parties
+
+it contain header, payload , signature
+
+6.02
