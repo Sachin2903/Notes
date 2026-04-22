@@ -1,516 +1,324 @@
-# 🗄️ Complete SQL Notes (Basic → Advanced)
+# 🔹 1. SQL Basics
+
+* **SQL (Structured Query Language)** → used to interact with databases
+* Performs **CRUD operations**:
+
+| Operation | Description     |
+| --------- | --------------- |
+| CREATE    | Insert new data |
+| READ      | Fetch data      |
+| UPDATE    | Modify data     |
+| DELETE    | Remove data     |
+
+👉 SQL is **not a database**, it's a **query language**
 
 ---
 
-# 📘 1. What is SQL?
+# 🔹 2. RDBMS
 
-Structured Query Language (SQL) is used to:
+* **RDBMS** = software to manage relational databases
+* Examples: MySQL, Oracle, SQL Server
+* Data stored in **tables (relations)**
 
-* Store data
-* Retrieve data
-* Update/Delete data
-* Manage databases
+👉 **MySQL** = open-source RDBMS using SQL
 
 ---
 
-# 🧱 2. Database Basics
+# 🔹 3. SQL vs MySQL
 
-## Create Database
+| SQL            | MySQL                 |
+| -------------- | --------------------- |
+| Query language | Database software     |
+| Used for CRUD  | Stores & manages data |
+
+---
+
+# 🔹 4. Data Types
+
+* Numeric → INT, BIGINT
+* String → CHAR, VARCHAR
+* Date → DATE, TIME
+
+👉 Order of size:
+`TINY < SMALL < MEDIUM < INT < BIGINT`
+
+👉 Prefer `VARCHAR` (dynamic size)
+
+---
+
+# 🔹 5. Types of SQL Commands
+
+## ✅ DDL (Structure)
+
+* CREATE, ALTER, DROP, TRUNCATE, RENAME
+
+## ✅ DML (Data)
+
+* INSERT, UPDATE, DELETE
+
+## ✅ DQL/DRL (Query)
+
+* SELECT
+
+## ✅ DCL (Permissions)
+
+* GRANT, REVOKE
+
+## ✅ TCL (Transactions)
+
+* COMMIT, ROLLBACK, SAVEPOINT
+
+---
+
+# 🔹 6. Database Operations
 
 ```sql
-CREATE DATABASE mydb;
-```
-
-## Use Database
-
-```sql
-USE mydb;
-```
-
-## Show Databases
-
-```sql
+CREATE DATABASE db;
+USE db;
+DROP DATABASE db;
 SHOW DATABASES;
-```
-
----
-
-# 📊 3. Table Operations
-
-## Create Table
-
-```sql
-CREATE TABLE category (
-  id BIGINT PRIMARY KEY AUTO_INCREMENT,
-  name VARCHAR(255)
-);
-```
-
-## Show Tables
-
-```sql
 SHOW TABLES;
 ```
 
-## Describe Table
+---
+
+# 🔹 7. SELECT & Filtering
 
 ```sql
-DESCRIBE category;
+SELECT * FROM table;
 ```
 
-## Drop Table
+## Conditions
 
 ```sql
-DROP TABLE category;
+WHERE age > 18
+BETWEEN 1 AND 10
+IN ('A','B')
+IS NULL
+```
+
+## Operators
+
+```sql
+AND, OR, NOT
+```
+
+## Pattern Matching
+
+```sql
+LIKE '%abc%'   -- any
+LIKE 'a_'      -- single char
 ```
 
 ---
 
-# ✍️ 4. CRUD Operations
-
-## Insert
+# 🔹 8. Sorting & Grouping
 
 ```sql
-INSERT INTO category (name) VALUES ('Food');
+ORDER BY col ASC/DESC
+GROUP BY col
 ```
 
-## Select
+## Aggregates
+
+* COUNT(), SUM(), AVG(), MIN(), MAX()
+
+---
+
+# 🔹 9. HAVING vs WHERE
+
+| WHERE           | HAVING         |
+| --------------- | -------------- |
+| Before grouping | After grouping |
+| Filters rows    | Filters groups |
+
+---
+
+# 🔹 10. DISTINCT
 
 ```sql
-SELECT * FROM category;
-SELECT name FROM category;
-```
-
-## Update
-
-```sql
-UPDATE category SET name='Tech' WHERE id=1;
-```
-
-## Delete
-
-```sql
-DELETE FROM category WHERE id=1;
+SELECT DISTINCT col FROM table;
 ```
 
 ---
 
-# 🔍 5. Filtering & Conditions
+# 🔹 11. Constraints
+
+| Type        | Description             |
+| ----------- | ----------------------- |
+| PRIMARY KEY | Unique + not null       |
+| FOREIGN KEY | Reference another table |
+| UNIQUE      | Unique values           |
+| CHECK       | Condition               |
+| DEFAULT     | Default value           |
+
+---
+
+# 🔹 12. ALTER Table
 
 ```sql
-SELECT * FROM category WHERE name='Food';
-SELECT * FROM category WHERE id > 2;
-SELECT * FROM category WHERE name LIKE '%oo%';
+ADD column
+MODIFY column
+DROP column
+RENAME table
 ```
 
 ---
 
-# 🔢 6. Sorting & Limiting
+# 🔹 13. DML Operations
 
 ```sql
-SELECT * FROM category ORDER BY name ASC;
-SELECT * FROM category LIMIT 5;
+INSERT INTO table VALUES (...)
+UPDATE table SET col=val WHERE cond
+DELETE FROM table WHERE cond
 ```
 
 ---
 
-# 🔗 7. Relationships (Joins)
+# 🔹 14. CASCADE
 
-## Inner Join
+* `ON DELETE CASCADE` → delete child rows
+* `ON UPDATE CASCADE` → update child rows
+
+---
+
+# 🔹 15. Joins
+
+## INNER JOIN
+
+* Matching data only
+
+## LEFT JOIN
+
+* All left + matched right
+
+## RIGHT JOIN
+
+* All right + matched left
+
+## FULL JOIN
+
+* All records (use UNION in MySQL)
+
+## CROSS JOIN
+
+* Cartesian product
+
+## SELF JOIN
+
+* Table joins itself
+
+---
+
+# 🔹 16. Set Operations
 
 ```sql
-SELECT * FROM product p
-JOIN category c ON p.category_id = c.id;
+UNION        -- combine (distinct)
+UNION ALL    -- allow duplicates
 ```
 
-## Left Join
+---
+
+# 🔹 17. Subqueries
+
+* Query inside query
 
 ```sql
-SELECT * FROM product p
-LEFT JOIN category c ON p.category_id = c.id;
+SELECT * FROM table WHERE id IN (SELECT id FROM table2);
 ```
+
+## Types
+
+* WHERE clause
+* FROM clause
+* SELECT clause
+* Correlated subquery
 
 ---
 
-# 📊 8. Aggregation
+# 🔹 18. Views
+
+* Virtual table (no data stored)
 
 ```sql
-SELECT COUNT(*) FROM category;
-SELECT AVG(price) FROM product;
-SELECT MAX(price), MIN(price) FROM product;
+CREATE VIEW v AS SELECT * FROM table;
 ```
 
----
-
-# 🧠 9. Group By
-
-```sql
-SELECT category_id, COUNT(*)
-FROM product
-GROUP BY category_id;
-```
+👉 Updates in base table reflect in view
 
 ---
 
-# 🔒 10. Constraints
+# 🔹 19. Key Concepts
 
-* PRIMARY KEY
-* FOREIGN KEY
-* NOT NULL
-* UNIQUE
-
----
-
-# ⚙️ 11. Indexes
-
-```sql
-CREATE INDEX idx_name ON category(name);
-```
+* SQL works **right → left execution**
+* `GROUP BY` without aggregation ≈ DISTINCT
+* Views are **virtual tables**
+* Joins = combine tables
+* Subqueries = nested logic
 
 ---
 
-# 🔐 12. USER MANAGEMENT (IMPORTANT 🚀)
+# 🔑 Final Takeaway
 
-## Create User
-
-```sql
-CREATE USER 'springuser'@'localhost' IDENTIFIED BY 'password123';
-```
-
-## Grant Permissions
-
-```sql
-GRANT ALL PRIVILEGES ON mydb.* TO 'springuser'@'localhost';
-```
-
-## Limited Permissions
-
-```sql
-GRANT SELECT, INSERT ON mydb.* TO 'springuser'@'localhost';
-```
-
-## Apply Changes
-
-```sql
-FLUSH PRIVILEGES;
-```
-
-## Show Users
-
-```sql
-SELECT user, host FROM mysql.user;
-```
-
-## Show Grants
-
-```sql
-SHOW GRANTS FOR 'springuser'@'localhost';
-```
-
-## Change Password
-
-```sql
-ALTER USER 'springuser'@'localhost' IDENTIFIED BY 'newpassword';
-```
-
-## Change Auth Method
-
-```sql
-ALTER USER 'springuser'@'localhost'
-IDENTIFIED WITH mysql_native_password BY 'password123';
-```
-
-## Revoke Permissions
-
-```sql
-REVOKE ALL PRIVILEGES ON mydb.* FROM 'springuser'@'localhost';
-```
-
-## Delete User
-
-```sql
-DROP USER 'springuser'@'localhost';
-```
-
-## Rename User
-
-```sql
-RENAME USER 'olduser'@'localhost' TO 'newuser'@'localhost';
-```
-
-## Lock / Unlock User
-
-```sql
-ALTER USER 'springuser'@'localhost' ACCOUNT LOCK;
-ALTER USER 'springuser'@'localhost' ACCOUNT UNLOCK;
-```
-
-## Password Expiry
-
-```sql
-ALTER USER 'springuser'@'localhost' PASSWORD EXPIRE;
-```
+* SQL = language
+* MySQL = database
+* Tables = data storage
+* Joins + Subqueries = data relationships
+* Constraints = data rules
 
 ---
 
-# 🌐 13. Host Types
 
-| Host         | Meaning      |
-| ------------ | ------------ |
-| localhost    | same machine |
-| %            | any machine  |
-| 192.168.1.10 | specific IP  |
-| 192.168.1.%  | IP range     |
+1. SELECT * FROM CUSTOMER;
 
----
+2. SELECT COUNTRY, CITY FROM CUSTOMER;
 
-# 🚀 14. Transactions
+3. SELECT DISTINCT COUNTRY, CITY FROM CUSTOMER;
+DISTINCT applies to the entire row combination
+It returns unique pairs of (Country, City)
 
-```sql
-START TRANSACTION;
-UPDATE category SET name='Test';
-ROLLBACK;
-COMMIT;
-```
+4. SELECT * FROM CUSTOMERS
+WHERE CITY = 'DELHI';
+WHERE PRICE > 40;
+WHERE PRICE < 40;
+WHERE PRICE != or <> 40;
+WHERE PRICE = 40;
+WHERE PRICE BETWEEN 40 AND 100;
+WHERE CITY LIKE 'S%'  '%S' '%S'
+WHERE CITY IN ('DELHI','GOA');
 
----
+5. SELECT * FROM CUSTOMER
+ORDER BY CITY ASC, COUNTRY DESC;
 
-# ⚡ 15. Views
+6. PRIOPITY CHAIN
+()       → comparison operators (=, >, <, LIKE, BETWEEN, IN, etc.)      → NOT      → AND      → OR
 
-```sql
-CREATE VIEW my_view AS
-SELECT name FROM category;
-```
+7. INSERT INTO CUSTOMER (COUNTRY,CITY)
+VALUES ('INDIA','DELHI')
 
----
+8. SELECT * FROM CUSTOMER 
+WHERE COUNTRY IS NOT NULL;
+     ---  or ---
+WHERE COUNTRY IS NULL;
 
-# 📦 16. Stored Procedures
+9. UPDATE CUSOMTER
+SET COUNTRY = 'DELHI'
+WHERE COUNTRY ='UP';
 
-```sql
-DELIMITER //
-CREATE PROCEDURE getCategories()
-BEGIN
-  SELECT * FROM category;
-END //
-DELIMITER ;
-```
+10. DELETE FROM CUSTOMERS
+WHERE CITY ="DELHI"
 
----
+11. DROP TABLE CUSTOMERS;
 
-# 🧩 17. Triggers
+12. SELECT TOP 3 * FROM CUSTOMER;
+SELECT TOP 3 PERCENT * FROM CUSTOMER;
 
-```sql
-CREATE TRIGGER before_insert_category
-BEFORE INSERT ON category
-FOR EACH ROW
-SET NEW.name = UPPER(NEW.name);
-```
+MYSQL -> 
+SELECT * FROM CUSTOMER
+LIMIT 3;
 
----
+13. An aggregate function is a function that performs a calculation on a set of values, and returns a single value.
 
-# ⚠️ Best Practices
 
-* Use indexes for performance
-* Avoid SELECT * in production
-* Use proper constraints
-* Use dedicated DB users (not root)
 
----
 
-# 🎯 FINAL SUMMARY
-
-* DDL → CREATE, ALTER, DROP
-* DML → INSERT, UPDATE, DELETE
-* DQL → SELECT
-* DCL → GRANT, REVOKE
-* TCL → COMMIT, ROLLBACK
-
----
-
-💡 This is a complete SQL roadmap from beginner → advanced 🚀
-
----
-
-# 🧠 18. Advanced Filtering
-
-```sql
-SELECT * FROM product WHERE price BETWEEN 100 AND 500;
-SELECT * FROM product WHERE name IN ('A','B');
-SELECT * FROM product WHERE name IS NULL;
-```
-
----
-
-# 🔄 19. Subqueries
-
-```sql
-SELECT * FROM product
-WHERE category_id IN (SELECT id FROM category WHERE name='Food');
-```
-
----
-
-# 🧮 20. CASE Statement
-
-```sql
-SELECT name,
-CASE
-  WHEN price > 100 THEN 'Expensive'
-  ELSE 'Cheap'
-END
-FROM product;
-```
-
----
-
-# 🧵 21. String Functions
-
-```sql
-SELECT UPPER(name), LOWER(name) FROM category;
-SELECT LENGTH(name) FROM category;
-SELECT CONCAT(name, ' category') FROM category;
-```
-
----
-
-# 📅 22. Date Functions
-
-```sql
-SELECT NOW();
-SELECT CURDATE();
-SELECT DATE_ADD(NOW(), INTERVAL 5 DAY);
-```
-
----
-
-# 🔢 23. Numeric Functions
-
-```sql
-SELECT ROUND(10.567, 2);
-SELECT CEIL(10.2), FLOOR(10.9);
-```
-
----
-
-# 🪟 24. Window Functions (Advanced 🔥)
-
-```sql
-SELECT name, price,
-RANK() OVER (ORDER BY price DESC) as rank
-FROM product;
-```
-
----
-
-# 🧩 25. Normalization
-
-* 1NF → atomic values
-* 2NF → remove partial dependency
-* 3NF → remove transitive dependency
-
----
-
-# ⚡ 26. Denormalization
-
-👉 Used for performance optimization
-
----
-
-# 🔍 27. Execution Order of SQL
-
-1. FROM
-2. WHERE
-3. GROUP BY
-4. HAVING
-5. SELECT
-6. ORDER BY
-
----
-
-# 🧱 28. HAVING vs WHERE
-
-```sql
-SELECT category_id, COUNT(*)
-FROM product
-GROUP BY category_id
-HAVING COUNT(*) > 2;
-```
-
----
-
-# 🧾 29. UNION vs UNION ALL
-
-```sql
-SELECT name FROM category
-UNION
-SELECT name FROM product;
-```
-
----
-
-# 🔐 30. Transactions Deep Dive
-
-* ACID Properties
-
-  * Atomicity
-  * Consistency
-  * Isolation
-  * Durability
-
----
-
-# 🧠 31. Isolation Levels
-
-* READ UNCOMMITTED
-* READ COMMITTED
-* REPEATABLE READ
-* SERIALIZABLE
-
----
-
-# ⚙️ 32. Performance Tips
-
-* Use indexes
-* Avoid full table scan
-* Use LIMIT
-* Use proper joins
-
----
-
-# 📦 33. Backup & Restore
-
-```bash
-mysqldump -u root -p mydb > backup.sql
-mysql -u root -p mydb < backup.sql
-```
-
----
-
-# 🔥 34. Real Interview Topics
-
-* Difference between DELETE vs TRUNCATE vs DROP
-* Index types
-* Joins types
-* Normalization
-* Transactions
-* Query optimization
-
----
-
-# 🎯 FINAL MASTER SUMMARY
-
-You now know:
-
-✔ SQL Basics
-✔ CRUD Operations
-✔ Joins & Relationships
-✔ Aggregation & Grouping
-✔ User Management
-✔ Transactions
-✔ Advanced SQL (Window, Subquery)
-✔ Performance & Optimization
-✔ Real-world concepts
-
----
-
-🚀 This is now a COMPLETE SQL roadmap (Beginner → Advanced → Interview Ready)

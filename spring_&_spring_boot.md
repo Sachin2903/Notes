@@ -42,22 +42,6 @@ public class Car{
 private Engine engine;
 ```
 
-
-3. Aspect -Oriented Programing (AOP)
-AOP helps separate cross cutting concerns from business logic . it allows you to add additional behaviour to code without modifying the code itself
-
-4. Spring MVC
-A framework for building web applications, SPring MVC follows the Model-VIew-COntroller (MVC) desing pattern. It simplifies the development of web application by providing an efficinet way to handle HTTP request and response
-
-5. Transation Management
-make earier in databse transaaction by using spring transaction management abstraction 
-
-6. spring secuirty
-A custom authentication and authorization framework
-
-7. Spring Boot
-ALthrough a part of the broader spring ecosystem, spring boot is a tool that simplifies the development of new spring applications.  
-
 ##### Spring boot setup
 jdk --> sudo apt install openjdk-21-jdk -y
 intejj  sudo snap install intellij-idea-community --classic
@@ -90,7 +74,7 @@ mvn clean install -DskipTests
 src -> main -> java -> com.test.springboot-> SpringbootApplication.java
 
 #### Annotations
-@Component , @Bean , @Configuration , @Controller , @RestController , @Service , @Repository
+@Component , @Bean , @Configuration , @Controller , @RestController , @Service , @Repository, @Entity
 
 public → everyone
 protected → family + neighbors
@@ -126,8 +110,35 @@ priate MyClass myClass;
 but class must be @Component
 ```
 
-default value
-public MyComponent(@Value("10") int a)
+@Value()
+
+1.
+@Value("10")
+private int a;
+
+2. 
+public HelperClass(@Value("10") int a) {
+    this.a = a;
+}
+
+3.
+@Bean
+public MyBean myBean(@Value("10") int a) {
+    return new MyBean(a);
+}
+
+application properties
+app.numbers=1,2,3,4
+app.names=Sachin,Rahul,Amit
+
+@Value("${app.numbers}")
+private int[] numbers;
+
+@Value("${app.names}")
+private List<String> names;
+
+@Value("#{'${app.names}'.split(',')}")
+private List<String> names;
 
 ###### @AutoWired
 use when inject class. class must be @Component or @Bean and @Conifguration
@@ -508,7 +519,6 @@ Student s = Student.builder()
 ---
 
 ### REST API
-1:22min
 
 ```java
 import jakarta.persistence.*;
@@ -600,7 +610,7 @@ ALL	everything
 ✅ orphanRemoval
 @OneToOne(orphanRemoval = true)
 
-👉 If you remove profile from user:
+👉 If you remove profile from user: profile becomes orphan so hibernate remove it auto
 
 ```
 2. OneToMany ManyToOne
@@ -609,7 +619,7 @@ User{
     @Id
     private int id;
 
-    @OneToMany(manageby="user",cascade=CascadeType.All)
+    @OneToMany(mappedBy="user",cascade=CascadeType.All)
     private List<Post> post;
 }
 
@@ -660,71 +670,8 @@ Tag{
 application.properties configure how your Spring Boot application behaves.
 
 1️⃣ spring.application.name=demo
-What it means
-
-This gives a name to your application.
-
-spring.application.name=demo
-Why it exists
-
-Spring Boot uses this name in:
-
-logs
-
-monitoring
-
-microservices
-
-Example
-
-When your app starts you may see:
-
-Starting demo application...
-
-If you change it:
-
-spring.application.name=myApp
-
-Log becomes:
-
-Starting myApp application...
-
-Think of it like naming your project.
-
 2️⃣ server.port=8080
-What it means
-
-This tells Spring Boot which port your server should run on.
-
-server.port=8080
-Example
-
-Your application becomes available at:
-
-http://localhost:8080
-
-If you change it:
-
-server.port=9090
-
-Then it runs at:
-
-http://localhost:9090
-Simple analogy
-
-Your computer = building
-Port = door number
-
-Computer
- └── Port 8080 → Spring Boot App
-
 3️⃣ spring.datasource.url=jdbc:h2:mem:testDB
-
-This tells Spring which database to use.
-
-jdbc:h2:mem:testDB
-
-Let's break it.
 
 Part	Meaning
 jdbc	Java database connection technology
@@ -732,57 +679,13 @@ h2	H2 database
 mem	in-memory database
 testDB	database name
 
-What is H2?
-
-H2 is a lightweight database used for testing.
-
-What is mem?
-
-mem means memory database.
-
-So the database:
-
-exists only while the app runs
-
-disappears when the app stops
-
-Example:
-
-Start App → Database Created
-Stop App → Database Deleted
-
 4️⃣ spring.datasource.driverClassName=org.h2.Driver
-What it means
-
-This tells Java which driver to use to connect to the database.
-
-Think of a driver like a translator.
 
 Spring Boot → Driver → Database
-
-Driver used here:
-
-org.h2.Driver
-
-Because we are using H2 database.
+spring auto detect driver
 
 5️⃣ spring.datasource.username=sa
-
-This is the database username.
-
-H2 default user is:
-
-sa
-
 6️⃣ spring.datasource.password=
-
-This is the database password.
-
-H2 usually has no password, so it is empty.
-
-username = sa
-password = (empty)
-
 7️⃣ spring.h2.console.enabled=true
 
 This enables a web page where you can see the database.
@@ -797,105 +700,13 @@ You can open:
 
 http://localhost:8080/h2-console
 
-Then you can:
-
-see tables
-
-run SQL queries
-
-check stored data
-
-Example query:
-
-SELECT * FROM product;
-
-Very useful for learning and debugging.
-
 8️⃣ spring.jpa.show-sql=true
-
-This tells Spring Boot:
-
-👉 Print SQL queries in the console
-
-Example.
-
-If you save a product:
-
-productRepository.save(product);
-
-Console shows:
-
-insert into product (name, price) values (?, ?)
-
-Why useful?
-
-You can see:
-
-what queries are executed
-
-if something is wrong
-
 9️⃣ spring.jpa.hibernate.ddl-auto=update
-
-This is VERY IMPORTANT.
-
-It tells Hibernate how to manage database tables.
-
-Here it is set to:
-
-update
-
-Meaning:
-
 👉 If your entity changes, Spring updates the table automatically.
-
-Example.
-
-Entity:
-
-@Entity
-class Product {
-    String name;
-}
-
-Table created:
-
-product
- └── name
-
-Later you add:
-
-String price;
-
-Spring automatically updates table:
-
-product
- ├── name
- └── price
-
-No manual SQL needed.
 
 🔟 spring.jpa.properties.hibernate.format_sql=true
 
 This makes SQL easier to read in logs.
-
-Without formatting:
-
-select product0_.id as id1_0_,product0_.name as name2_0_ from product product0_
-
-With formatting:
-
-select
-    product0_.id,
-    product0_.name
-from
-    product product0_
-
-Much cleaner.
-
-Spring Boot → JDBC URL → Driver → Database
-
-The URL tells Java which database to connect to, and the driver is the software that understands that database.
 
 1️⃣ H2 Database (In-Memory)
 
@@ -983,64 +794,7 @@ H2	                    jdbc:h2:mem:testDB	                        org.h2.Driver
 MySQL	                jdbc:mysql://localhost:3306/mydb	        com.mysql.cj.jdbc.Driver
 PostgreSQL	            jdbc:postgresql://localhost:5432/mydb    	org.postgresql.Driver
 Oracle	                jdbc:oracle:thin:@localhost:1521:xe	        oracle.jdbc.OracleDriver
-SQL Server	            jdbc:sqlserver://localhost:1433	            com.microsoft.sqlserver.jdbc.SQLServerDriver
-
-
-###### ✅ Cascade in JPA / Hibernate — Short Summary
-
-👉 What is Cascade?
-**Cascade** means:
-
-> Actions performed on the **parent entity** automatically apply to its **child entities**.
-
-Example:  
-If you save an `Order`, its `OrderItems` are saved automatically.
-
----
-
-🔑 Main Cascade Types
-
-✅ CascadeType.PERSIST
-- Automatically **inserts child records** when the parent is saved.
-- Does NOT update existing records.
-
-🧠 **Memory Trick:** *Insert together.*
-
----
-
-✅ CascadeType.MERGE
-- Automatically **updates child records** when the parent is updated.
-- Synchronizes detached objects with the database.
-
-🧠 **Memory Trick:** *Update together.*
-
----
-
-✅ CascadeType.REMOVE
-- Automatically **deletes child records** when the parent is deleted.
-- ⚠️ No safety check — deletes blindly.
-
-🧠 **Memory Trick:** *Delete together.*
-
----
-
-✅ CascadeType.ALL
-Includes:
-- PERSIST  
-- MERGE  
-- REMOVE  
-- REFRESH  
-- DETACH  
-
-⚠️ Powerful but risky — use carefully.
-
-🧠 **Memory Trick:** *Do everything.*
-
----
-
-⭐ Golden Rule
-👉 **Use cascade ONLY when the child cannot exist without the parent.**
-
+SQL Server	            jdbc:sqlserver://localhost:1433	            com.microsoft.sqlserver.jdbc.SQLServerDriver+
 
 #### Controller
 ```java
@@ -1186,7 +940,7 @@ return ResponseEntity
         .header("X-App", "Demo")
         .body(data);
 
-###### Repository functions
+###### Repository functions 
 1. Basic CRUD Methods (Most Used)
 findAll()                Get all records
 findById(id)             Get one by ID (Optional)
@@ -1207,6 +961,12 @@ findByStatus(String status)
 findByNameAndStatus(String name, String status)
 findByPriceGreaterThan(double price)
 findByCreatedAtBetween(Date start, Date end)
+List<User> findByName(String name);
+User findByEmail(String email);
+List<User> findByAgeGreaterThan(int age);
+List<User> findByNameAndStatus(String name, String status);
+User user = userRepository.findTopByName(String name);
+User user = userRepository.findFirstByName(String name);
 
 3. Pagination
 Pageable pageable = PageRequest.of(0, 10, Sort.by("name").ascending());
@@ -1618,28 +1378,146 @@ public interface UserRepository extends JpaRepository<User, Long> {
 }
 
 @Service
-public class CustomUserDetailsService implements UserDetailsService {
+public class MyUserService implements UserDetailsService {
 
-    private final UserRepository userRepository;
 
-    public CustomUserDetailsService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    @Autowired
+    private UserRepository userRepository;
+
+    public User createUser(User user){
+        return userRepository.save(user);
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-
+      Optional<User> user=userRepository.findByUsername(username);
+      if(user.isEmpty()){
+          throw   new UsernameNotFoundException("user not found");
+      }
         return org.springframework.security.core.userdetails.User.builder()
-                .username(user.getUsername())
-                .password(user.getPassword())
-                .authorities(user.getRole()) // must be ROLE_*
+                .username(user.get().getUsername())
+                .password(user.get().getPassword())
+                .authorities(
+                        user.get().getRoles().stream()
+                                .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
+                                .toList()
+                )
                 .build();
     }
 }
 
+we use this new SimpleGrantedAuthority  because spring requires an object
+
+use of this .authorities(user.getRole())
+.requestMatchers("/api/data")
+.hasAnyRole("USER", "ADMIN")
+
+// this create  aseperate table
+@ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "role")
+    private List<String> roles;
+
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig {
+
+    private final CustomUserDetailsService userDetailsService;
+
+    public SecurityConfig(CustomUserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
+
+      @Bean
+    public SecurityFilterChain securityFilter(HttpSecurity http) throws Exception {
+        http.csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(request -> {
+                    request.requestMatchers(HttpMethod.GET, "/api/**").permitAll();
+                            request.anyRequest().authenticated();
+                        }
+                ).authenticationProvider(authenticationProvider())
+                .httpBasic(Customizer.withDefaults());
+
+        return http.build();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public DaoAuthenticationProvider authProvider() {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(userDetailsService);
+        provider.setPasswordEncoder(passwordEncoder());
+        return provider;
+    }
+
+     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
+
+    }
+}
+
+Authentication auth = authenticationManager.authenticate(
+    new UsernamePasswordAuthenticationToken(username, password)
+);
+
+if (auth.isAuthenticated()) {
+    String token = jwtService.generateToken(username);
+    return token;
+}
+
+Request → Security Filter → AuthenticationManager
+        → AuthenticationProvider
+        → UserDetailsService
+
+
+
+    @Bean
+    public PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder(12);
+    }
+
+can pass strength 
+
+```
+
+or
+
+```java
+ @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+      Optional<User> user=userRepository.findByUsername(username);
+      if(user.isEmpty()){
+          throw   new UsernameNotFoundException("user not found");
+      }
+        return new UserPrinciple(user.get());
+    }
+public class UserPrinciple implements UserDetails {
+
+    private final User user;
+
+    public UserPrinciple(User user){
+        this.user=user;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("ROLE_SELLER"));
+    }
+
+    @Override
+    public String getPassword() {
+        return user.getPassword();
+    }
+
+    @Override
+    public String getUsername() {
+        return user.getUsername();
+    }
+}
 ```
 
 ### JWT TOKEN Based Authentication
@@ -1647,4 +1525,267 @@ JSON web token is a secure way to send information between two parties
 
 it contain header, payload , signature
 
-6.02
+```java
+@Entity
+public class RefreshToken {
+
+    @Id
+    @GeneratedValue
+    private Long id;
+
+    private String token;
+
+    private String username;
+
+    private Instant expiryDate;
+}
+
+public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long> {
+    Optional<RefreshToken> findByToken(String token);
+}
+@Service
+public class RefreshTokenService {
+
+    @Autowired
+    private RefreshTokenRepository repo;
+
+    public RefreshToken createRefreshToken(String username) {
+        RefreshToken token = new RefreshToken();
+        token.setUsername(username);
+        token.setToken(UUID.randomUUID().toString());
+        token.setExpiryDate(Instant.now().plus(7, ChronoUnit.DAYS));
+        return repo.save(token);
+    }
+
+    public RefreshToken verifyToken(String token) {
+        RefreshToken rt = repo.findByToken(token)
+                .orElseThrow(() -> new RuntimeException("Invalid refresh token"));
+
+        if (rt.getExpiryDate().isBefore(Instant.now())) {
+            repo.delete(rt);
+            throw new RuntimeException("Refresh token expired");
+        }
+
+        return rt;
+    }
+}
+
+```
+
+
+```bash
+	<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-api</artifactId>
+			<version>0.11.5</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-impl</artifactId>
+			<version>0.11.5</version>
+			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-jackson</artifactId>
+			<version>0.11.5</version>
+			<scope>runtime</scope>
+		</dependency>
+```
+
+```java
+@PostMapping("/login")
+public AuthResponse login(@RequestBody LoginRequest req) {
+
+    Authentication auth = authenticationManager.authenticate(
+        new UsernamePasswordAuthenticationToken(
+            req.getUsername(),
+            req.getPassword()
+        )
+    );
+
+    UserDetails user = (UserDetails) auth.getPrincipal();
+
+    String accessToken = jwtService.generateToken(user);
+    RefreshToken refreshToken = refreshTokenService.createRefreshToken(user.getUsername());
+
+    return new AuthResponse(
+            accessToken,
+            refreshToken.getToken(),
+            user.getUsername()
+    );
+}
+
+@PostMapping("/refresh")
+public AuthResponse refresh(@RequestBody String refreshToken) {
+
+    RefreshToken rt = refreshTokenService.verifyToken(refreshToken);
+
+    UserDetails user = userDetailsService.loadUserByUsername(rt.getUsername());
+
+    String newAccessToken = jwtService.generateToken(user);
+
+    return new AuthResponse(
+            newAccessToken,
+            refreshToken,
+            user.getUsername()
+    );
+}
+
+
+```
+
+```java
+
+@Component
+public class JwtRequestFilter extends OncePerRequestFilter {
+
+    @Autowired
+    private JwtService jwtService;
+
+    @Autowired
+    private UserDetailsService userDetailsService;
+
+    @Override
+    protected void doFilterInternal(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            FilterChain filterChain)
+            throws ServletException, IOException {
+
+        final String authHeader = request.getHeader("Authorization");
+
+        String username = null;
+        String token = null;
+
+        // 1. Extract token
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            token = authHeader.substring(7);
+            username = jwtService.extractUsername(token);
+        }
+
+        // 2. Validate and set authentication
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+
+            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
+            if (jwtService.validateToken(token, userDetails)) {
+
+                UsernamePasswordAuthenticationToken authToken =
+                        new UsernamePasswordAuthenticationToken(
+                                userDetails,
+                                null,
+                                userDetails.getAuthorities()
+                        );
+
+                SecurityContextHolder.getContext().setAuthentication(authToken);
+            }
+        }
+
+        // 3. Continue request
+        filterChain.doFilter(request, response);
+    }
+}
+
+
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig {
+
+    @Autowired
+    private JwtRequestFilter jwtRequestFilter;
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
+        http
+            .csrf(csrf -> csrf.disable())
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/user/login", "/user/register").permitAll()
+                .anyRequest().authenticated()
+            )
+            .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
+    }
+}
+```
+
+### OAuth2 
+
+
+###  📘 Logging & Actuator (Quick Notes)
+
+* Records app events (info, debug, errors)
+* Default: **Logback**
+
+#####  Usage
+
+```java
+Logger log = LoggerFactory.getLogger(MyClass.class);
+log.info("Info");
+log.debug("Debug");
+log.error("Error");
+```
+
+#####  Levels
+
+TRACE < DEBUG < INFO < WARN < ERROR
+
+#####  Config
+
+```properties
+logging.level.root=INFO
+logging.level.org.springframework.security=DEBUG
+logging.file.name=app.log
+```
+
+---
+
+####  🔹 Actuator
+
+* Monitoring & management endpoints
+
+#####  Dependency
+
+```xml
+spring-boot-starter-actuator
+```
+
+#####  Common Endpoints
+
+* `/actuator/health`
+* `/actuator/info`
+* `/actuator/beans`
+* `/actuator/loggers`
+
+#####  Enable
+
+```properties
+management.endpoints.web.exposure.include=*
+```
+
+#####  Production (safe)
+
+```properties
+management.endpoints.web.exposure.include=health,info
+```
+
+---
+
+######  🔥 Combo (Power Feature)
+
+Change log level at runtime:
+
+```
+POST /actuator/loggers/{package}
+{
+  "configuredLevel": "DEBUG"
+}
+```
+
+---
+
+

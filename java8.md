@@ -399,6 +399,45 @@ BiFunction<Integer, Integer, ArrayList> func = ArrayList::new;
 .parallelStream() is same as stream but it works on chunks thread
 
 
+##### Optonal
+Optional<String> opt1 = Optional.of("Hello");     // ❌ Null not allowed
+Optional<String> opt2 = Optional.ofNullable(null); // ✅ Can handle null
+Optional<String> opt3 = Optional.empty();         // Empty Optional
+
+opt.isPresent();   // true/false
+opt.isEmpty();     // Java 11+
+
+Optional<String> name = Optional.of("Sachin");
+
+Optional<Integer> length = name.map(String::length);
 
 
+Optional<User> user = Optional.of(new User());
 
+Optional<Address> address =
+    user.flatMap(User::getAddress);
+
+    opt.ifPresent(val -> System.out.println(val));
+
+opt.ifPresentOrElse(
+    val -> System.out.println(val),
+    () -> System.out.println("No value")
+);
+
+Optional<Integer> num = Optional.of(10);
+
+num.filter(n -> n > 5)
+   .ifPresent(System.out::println);
+
+Optional<User> user = findUserById(id);
+
+String city = user
+    .map(User::getAddress)
+    .map(Address::getCity)
+    .orElse("Unknown");
+
+String str = "abc";
+
+str.chars()
+   .mapToObj(c -> (char) c)   // int → char
+   .forEach(System.out::println);
