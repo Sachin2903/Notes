@@ -318,7 +318,55 @@ SELECT * FROM CUSTOMER
 LIMIT 3;
 
 13. An aggregate function is a function that performs a calculation on a set of values, and returns a single value.
+MIN()
+MAX()
+AVG()
+COUNT()
+SUM()
+
+14. JOINS
+The JOIN clause is used to combine rows from two or more tables, based on a related column between them.
+
+14a. Inner Join 
+The INNER JOIN returns only rows that have matching values in both tables.
+Tip: You can use just JOIN instead of INNER JOIN, as INNER is the default join type.
+
+SELECT column_name(s)
+FROM table1
+INNER JOIN table2
+ON table1.column_name = table2.column_name;
+
+column_name can be  :- OrderId / customer.orderid
 
 
+SELECT Orders.OrderID, Customers.CustomerName, Shippers.ShipperName
+FROM Orders
+INNER JOIN Customers ON Orders.CustomerID = Customers.CustomerID
+INNER JOIN Shippers ON Orders.ShipperID = Shippers.ShipperID;
 
+14b. 
 
+14c.
+
+14d.
+
+14e.
+
+15. Union
+
+16. UNION ALL
+
+17. GROUP BY
+
+18. HAVING
+
+19. EXISTS 
+
+20. ANY
+
+21. ALL
+
+22. SELECT INTO
+SELECT * INTO newtable [IN external_db]
+FROM sourcetable
+WHERE condition;
