@@ -1955,6 +1955,46 @@ List<Patient> findByBloodGroup(BloodGroupType bloodGroup);
 @Query("SELECT p FROM Patient p WHERE p.bloodGroup = :bloodGroup")
 List<Patient> findByBloodGroup(@Param("bloodGroup") BloodGroupType bloodGroup);
 
+###### Group by query
+
+@Query("select p.bloogGroup Count(p) from patient p group by p.bloodgroup")
+List<Object[]> countEachBloodGroupType(@Param("bloodGroup") BloodGroupType bloodGroupType);
+
+for(Object[] object:bloodGroupList){
+    System.out.println(object[0]+" "+object[1]);
+}
+
+###### Native query pure sql query
+
+@Query(value="select * from patient",nativeQuery=true)
+List<Patient> findAllPatients();
+
+###### Modify QUery
+
+@Transactional 
+@Modifying
+@Query("UPDATE Patient p Set p.name = :name where p.id= :id")
+int updateNameWithId(@Param("name") String name,@Param("id") Long id;)
+
+###### Projection
+
+public class BloodGroupCountResponseEntity{
+    private BloodGroupType bloodGroupType;
+    private Long count;
+}
+
+copy reference
+
+```java
+@Query("SELECT new com.yourpackage.BloodGroupCountResponseEntity(p.bloodGroup, COUNT(p)) " +
+       "FROM Patient p " +
+       "GROUP BY p.bloodGroup")
+List<BloodGroupCountResponseEntity> countEachBloodGroupType();
+```
+
+this can not done with native query 
+
+##### Paggination
 
 
 
