@@ -1,4 +1,4 @@
-                                                                  Angular
+#                                                               Angular
 
 - framework mantain by google
 - can build single page application
@@ -15,16 +15,18 @@ Compiles the application code during run time on the user's device. It results i
 **AOT (Ahead-Of-Time):**  
 Compiles the application code at build time before deployment. This leads to faster startup, better performance, and earlier error detection, making it ideal for production.
 
-# environment
+### environment
 
-Install node js
-then install angular cli npm install -g @angular/cli or @angular/cli@latest
+> Install node js
+> then install angular cli -----> npm install -g @angular/cli or @angular/cli@latest
 
-npm cache clean or npm cache verify
+> to have fresh version
+npm unstamm -g angular-cli
+npm cache clean or npm cache verify (if npm > 5)
 
 ng version
 
-# create angular project
+### create angular project
 
 ng new project_name
 
@@ -35,11 +37,32 @@ ng new project_name
 --> this add ssr in existing angular project with not
 ng add @angular/ssr
 
-# ngModule and standalone component
+to have config file for ai which will tell ai to follow which standard
+--> ng generate ai-config
+
+Feature	                   Prerendering	                    SSR
+When HTML is generated	  🏗️ Build time	             ⏱️ Request time
+Server required	             ❌ No	                        ✅ Yes
+Performance	               ⚡ Very fast	             ⚡ Fast (but slower than static)
+Dynamic content	               ❌ No	                       ✅ Yes
+Scalability	                ✅ Very high	            ⚠️ Limited by server
+SEO	                        ✅ Excellent	                ✅ Excellent
+
+### ngModule and standalone component
 
 before angular 14 if we create a compoennt , we need to declear it in module file
-
-![Alt text](./assests/angular/ngvsstandlaone)
+```js
+// app.module.ts
+@NgModule({
+  declarations: [
+    AppComponent,
+    MyComponent   // 👈 mandatory
+  ],
+  imports: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule {}
+```
 
 lazy loading
 if done lazy loading in ngmodule the whole mofule have to lazy load and in standalone component we even can lazy load a component
@@ -48,7 +71,7 @@ if done lazy loading in ngmodule the whole mofule have to lazy load and in stand
 
 > > ng new project_name --no-standalone
 
-# Can Write Html And css direct in .ts file
+### Can Write Html And css direct in .ts file
 
 ```java
 @Component({
@@ -60,27 +83,85 @@ if done lazy loading in ngmodule the whole mofule have to lazy load and in stand
 })
 ```
 
-# user app-root to another component
+### user app-root to another component
 
 import that compoennt'class in imports
 then can user in html file <app-root></app-root>
 
-# Interpolation <h1>{{name}}</h1>
+### Create new component
+ng g c home
+   or
+ng g c extra/home
+
+<app-home></app-home>
+
+
+### Interpolation <h1>{{name}}</h1>
 
 ```js
 import { Component } from '@angular/core'; import { RouterOutlet } from
-'@angular/router'; @Component({ selector: 'app-root', templateUrl:
-'./app.component.html', styleUrl: './app.component.scss' }) export class
-AppComponent { name:string="Sachin" status:string="single" salary:number=30000
-diableButton:boolean=true } in .html file
+'@angular/router'; 
+@Component({ selector: 'app-root', 
+templateUrl: './app.component.html', 
+styleUrl: './app.component.scss' }) 
+
+export class AppComponent {
+   name:string="Sachin"
+   status:string="single" 
+   salary:number=30000
+disableButton:boolean=true
+ } 
+
+in .html file
 <h1>{{ name.toUpperCase() }} salary {{salary}]</h1>
 ```
 
-# Property Binding
+##### 🔑 Most Common Providers
+1. provideRouter(routes)
+→ Enables navigation & lazy loading
+```js
+export const routes = [
+  { path: 'home', loadComponent: () => import('./home.component') }
+];
+```
+2. provideHttpClient()
+→ Enables API calls (replaces HttpClientModule)
 
-<button [disabled]="diableButton">Property Binding</button>
+```js
+constructor(private http: HttpClient) {}
 
-# Event Binding
+this.http.get('/api/users').subscribe();
+```
+
+3. withInterceptors(...)
+→ Modify requests (auth token, logging, error handling)
+
+```js
+this.http.get('/api/data') // token added automatically
+```
+
+4. provideBrowserGlobalErrorListeners()
+→ Catches global JS & async errors
+
+5. provideAnimations()
+→ Enables UI animations (required for Angular Material)
+```html
+<div @fadeIn>Content</div>
+```
+
+6. provideZoneChangeDetection() (optional)
+→ Performance optimization
+```js
+provideZoneChangeDetection({
+  eventCoalescing: true
+})
+```
+
+### Property Binding
+
+<button [disabled]="disableButton">Property Binding</button>
+
+### Event Binding
 
 <!-- <input type="text" (changeases)="onChange($event)"/> -->
 
@@ -89,7 +170,7 @@ onChange(e:Event){
 const value=(e.target as HTMLInputElement).value;
 }
 
-# TwoWay data binding
+### TwoWay data binding
 
 <input type="text" [value]="inputVar" (input)="onChange($event)"/>
 
@@ -100,7 +181,7 @@ const value=(e.target as HTMLInputElement).value;
 this.inputVar=value;
 }
 
-## with FormsModule
+#### with FormsModule
 
 import this first
 
@@ -109,7 +190,7 @@ imports:[FormsModule],
 
 <input type="text" [(ngModel)]="inputVar"/>
 
-# Iterate
+### Iterate
 
 1.  control flow syntax
     <div>
@@ -149,7 +230,7 @@ imports:[FormsModule,CommonModule],
   <h1 *ngIf="user[0]=='s'">{{ user }}</h1>
 </div>
 
-# ng-template and else if
+### ng-template and else if
 
 ng-template is an Angular element used to define reusable, non-rendered content that can be conditionally or dynamically displayed in the DOM
 
@@ -187,7 +268,7 @@ ng-template is an Angular element used to define reusable, non-rendered content 
 None of the conditions are true.
 </ng-template>
 
-# ng-container
+### ng-container
 
 ng-container :- angular does show its content not himself in dom
 
@@ -217,7 +298,7 @@ Attribute Selector --> <ng-content select="[special]"></ng-content> --> Projects
 Multiple Selectors --> <ng-content select="h1, p, .my-class"></ng-content> --> Projects <h1>, <p>, and elements with my-class.
 Wildcard (\*) --> <ng-content></ng-content> --> Projects all content that doesn't match other ng-content slots.
 
-# switch case
+### switch case
 
 <div [ngSwitch]="true">
   <div *ngSwitchCase="condition1">Condition 1 is true.</div>
@@ -226,7 +307,7 @@ Wildcard (\*) --> <ng-content></ng-content> --> Projects all content that doesn'
   <div *ngSwitchDefault>None of the conditions are true.</div>
 </div>
 
-# button
+### button
 
 <button (click)="changeTitle"></button>
 
@@ -240,7 +321,7 @@ or
 
 }
 
-# Data passing from parent to child
+### Data passing from parent to child
 
 <app-user-profile name="sachin"></app-user-profile>
 <app-user-profile name="sachin" isSingle></app-user-profile>
@@ -250,11 +331,11 @@ return value;
 import { Component, Input } from '@angular/core';
 @Input({alias:"userName",transform:functionName}) name=""
 
-## booleanAttribute
+#### booleanAttribute
 
 @Input({alias:"userName",transform:booleanAttribute}) name=""
 
-# data passing from child to parent @Output and events
+### data passing from child to parent @Output and events
 
 > > through events
 
@@ -276,7 +357,7 @@ functionName(event:Event){
 console.log(event)
 }
 
-# pipe and custom pipe
+### pipe and custom pipe
 
 - Date pipe
 import { CommonModule } from '@angular/common';
@@ -393,7 +474,7 @@ other: '# messages.'
 
 -
 
-## custom pipe
+#### custom pipe
 
 ng g p pipes/cutomPipe
 
@@ -416,7 +497,7 @@ export class CutomPipePipe implements PipeTransform {
 
 to use this import this in imports in any module
 
-# Custom directive
+### Custom directive
 
 An Angular directive is a custom attribute or structural change to the DOM. It helps in reusing logic and manipulating DOM elements.
 
@@ -494,15 +575,15 @@ import directive in imports
 
 <h1 appHighligher ></h1>
 
-# Life cycle methods
+### Life cycle methods
 
 Lifecycle hooks are special methods in Angular that let you run code at specific times in a component's life.
 
-## availabe in class in js file . it calls when an instance of a class created
+##### availabe in class in js file . it calls when an instance of a class created
 
 contructor()
 
-### implements OnInit
+#### implements OnInit
 
 Use ngOnInit for initialization logic that runs once when the component is created.
 
@@ -514,7 +595,7 @@ ngOnInit(){
 constructor --> ngOnI
 nit
 
-### ngDoCheck: Custom Change Detection
+#### ngDoCheck: Custom Change Detection
 
 Called during every change detection cycle, even if no data has changed.
 After Angular's default change detection checks inputs.
@@ -522,19 +603,19 @@ ngDoCheck() {
 console.log('Custom change detection logic');
 }
 
-### implements OnDestroy
+#### implements OnDestroy
 
 ngOnDestroy(){
 called when compoent on longer exist
 }
 
-## change when compoennt rerender
+##### change when compoennt rerender
 
 ngOnChanges(){
 
 }
 
-## Logic to execute only when `specificValue` changes
+#### Logic to execute only when `specificValue` changes
 
 ngOnChanges(changes: SimpleChanges): void {
 if (changes['specificValue'] && changes['specificValue'].previousValue !== changes['specificValue'].currentValue) {
@@ -764,18 +845,25 @@ import {input} from "@angular/core"
 
 this.name() in compoennt and name() in html
 
-## Routing
+### Routing
 
 in app.config
 import { provideRouter } from '@angular/router';
 
+1. 
 import {routes} from "./app.routes";
 providers:[provideRouter(routes)]
 
+2. 
 in app.routes.ts
 
 export const routes:Routes=[
-{path:"login",component:LoginComponent}
+  {
+        path: "", redirectTo: "home", pathMatch: "full"
+    },
+    {
+        path: "home", component: Home, pathMatch: "full"
+    }
 ];
 
 then add <router-outlet><router-outlet>
@@ -784,12 +872,27 @@ then import that in app.compoennt.ts
 imports:[RouterOutlet]
 
 <a routerLink="/" routerLinkActive="active"></a>
+"/" or "["/","about"]"
 
-imports:[RouterLink,ROuterLinkActive]
+<a 
+  [routerLink]="['/login']"
+  [queryParams]="{ redirect: 'dashboard' }">
+  Login
+</a>
+/home#section1
+
+<a 
+  [routerLink]="['/home']"
+  fragment="section1">
+  Go to Section
+</a>
+
+imports:[RouterLink,RouterLinkActive]
+or RouterModule
 import this in import of that component
 RouterLink, RouterLinkActive
 
-## reactive and template driven forms
+#### reactive and template driven forms
 
 --> reactive
 
@@ -841,16 +944,6 @@ register(regForm:NgForm){
 res(regForm:NgForm){
   regForm.reset()
 }
-
-## routes and lazy loading component
-
-constructor(private route:Router){
-
-}
-this.route.navigate(["/login"])
-
-
-{path:"",redirectTo:"/login",pathMatch:"full"}
 
 #### 404 Page
 {path:"**",component:NotFound}
@@ -979,4 +1072,6 @@ is used to leazy load a specific template
 }@error{
 
 }
+
+1:32
 
